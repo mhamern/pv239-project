@@ -26,9 +26,9 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        createDrawer()
-        createAppBar()
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            createDrawer()
+            createAppBar()
             showOverview()
         }
     }
