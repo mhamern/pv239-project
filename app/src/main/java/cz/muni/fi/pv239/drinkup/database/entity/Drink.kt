@@ -25,8 +25,8 @@ data class Drink(
                 parcel.readDouble(),
                 parcel.readInt(),
                 Category.values()[parcel.readInt()],
-                // todo location
-                null)
+                parcel.readParcelable(Location::class.java.classLoader)
+        )
 
         companion object CREATOR : Parcelable.Creator<Drink> {
                 override fun createFromParcel(parcel: Parcel): Drink {
@@ -45,7 +45,7 @@ data class Drink(
                 if (volume != null) dest?.writeDouble(volume)
                 if (abv != null) dest?.writeInt(abv)
                 if (category != null) dest?.writeInt(category.ordinal)
-                // todo location
+                if (location != null) dest?.writeParcelable(location, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
         }
 
         override fun describeContents(): Int {
