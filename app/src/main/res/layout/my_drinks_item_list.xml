@@ -36,7 +36,6 @@
 
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_drinks_edit_button"/>\
-
+                android:id="@+id/my_drinks_edit_button"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
