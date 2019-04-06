@@ -48,8 +48,8 @@ class DrinkDefinitionsAdapter(private var context: Context, private var drinks: 
             name.text = drink.name
             category.text = drink.category.toString()
             price.text = drink.price.toString()
-            alcoholVolume.text = "alcoholvolume"// context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)
-            volume.text = "volume"//context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
+            alcoholVolume.text =  context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)
+            volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
             editButton.setOnClickListener {
                 val intent = Intent(context, EditDrinkActivity::class.java)
                 intent.putExtra("DRINK_TO_EDIT", drink)

@@ -11,7 +11,7 @@ data class DrinkDefinition (
     var name: String = "",
     var price: Int = 0,
     var volume: Double = 0.0,
-    var abv: Int = 0,
+    var abv: Double = 0.0,
     var category: Category = Category.BEER
 ): Parcelable {
 
@@ -21,7 +21,7 @@ data class DrinkDefinition (
         parcel.readString(),
         parcel.readInt(),
         parcel.readDouble(),
-        parcel.readInt(),
+        parcel.readDouble(),
         Category.values()[parcel.readInt()]
     )
 
@@ -40,7 +40,7 @@ data class DrinkDefinition (
         if (id != null) dest?.writeLong(id)
         dest?.writeInt(price)
         dest?.writeDouble(volume)
-        dest?.writeInt(abv)
+        dest?.writeDouble(abv)
         dest?.writeInt(category.ordinal)
     }
 

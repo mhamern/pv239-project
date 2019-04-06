@@ -12,7 +12,7 @@ data class Drink(
         var name: String = "",
         var price: Int = 0,
         var volume: Double = 0.0,
-        var abv: Int = 0,
+        var abv: Double = 0.0,
         var category: Category = Category.BEER,
         var location: Location? = null
 ): Parcelable {
@@ -23,7 +23,7 @@ data class Drink(
                 parcel.readString(),
                 parcel.readInt(),
                 parcel.readDouble(),
-                parcel.readInt(),
+                parcel.readDouble(),
                 Category.values()[parcel.readInt()],
                 parcel.readParcelable(Location::class.java.classLoader)
         )
@@ -43,7 +43,7 @@ data class Drink(
                 if (id != null) dest?.writeLong(id)
                 dest?.writeInt(price)
                 dest?.writeDouble(volume)
-                dest?.writeInt(abv)
+                dest?.writeDouble(abv)
                 dest?.writeInt(category.ordinal)
                 if (location != null) dest?.writeParcelable(location, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
         }
