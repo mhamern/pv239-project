@@ -5,12 +5,19 @@
              android:layout_height="match_parent"
              tools:context=".fragment.MyDrinksFragment">
 
-    <androidx.recyclerview.widget.RecyclerView android:id="@+id/my_drinks_list"
-                                               android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
-                                               android:layout_marginTop="16dp"/>
-    <Button android:id="@+id/my_drinks_create_button"
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_drinks_create_button_text"/>
+            android:id="@+id/my_drinks_wrapper"
+            android:orientation="horizontal">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/my_drinks_list"
+                                                   android:layout_width="wrap_content"
+                                                   android:layout_height="wrap_content"
+                                                   android:layout_marginTop="16dp"/>
+        <Button android:id="@+id/my_drinks_create_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_drinks_create_button_text"/>
+    </LinearLayout>
+
 </FrameLayout>

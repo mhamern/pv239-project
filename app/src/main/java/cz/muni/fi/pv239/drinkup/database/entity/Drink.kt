@@ -9,12 +9,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Drinks")
 data class Drink(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
-        val name: String? = "",
-        val price: Int? = 0,
-        val volume: Double? = 0.0,
-        val abv: Int? = 0,
-        val category: Category? = null,
-        val location: Location? = null
+        var name: String = "",
+        var price: Int = 0,
+        var volume: Double = 0.0,
+        var abv: Int = 0,
+        var category: Category = Category.BEER,
+        var location: Location? = null
 ): Parcelable {
 
 
@@ -41,10 +41,10 @@ data class Drink(
         override fun writeToParcel(dest: Parcel?, flags: Int) {
                 dest?.writeString(name)
                 if (id != null) dest?.writeLong(id)
-                if (price != null) dest?.writeInt(price)
-                if (volume != null) dest?.writeDouble(volume)
-                if (abv != null) dest?.writeInt(abv)
-                if (category != null) dest?.writeInt(category.ordinal)
+                dest?.writeInt(price)
+                dest?.writeDouble(volume)
+                dest?.writeInt(abv)
+                dest?.writeInt(category.ordinal)
                 if (location != null) dest?.writeParcelable(location, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
         }
 
