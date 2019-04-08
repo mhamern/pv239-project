@@ -88,6 +88,9 @@ class MyDrinksFragment : Fragment() {
         var drinks = listOf(
             drink1,
             drink2,
+            drink3,
+            drink1,
+            drink2,
             drink3
         )
         populateList(drinks)

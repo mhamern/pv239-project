@@ -18,19 +18,19 @@ data class DrinkDefinition (
 
     constructor(parcel: Parcel): this(
         parcel.readLong(),
-        parcel.readString(),
+        parcel.readString() ?: "",
         parcel.readDouble(),
         parcel.readDouble(),
         parcel.readDouble(),
         Category.values()[parcel.readInt()]
     )
 
-    companion object CREATOR : Parcelable.Creator<Drink> {
-        override fun createFromParcel(parcel: Parcel): Drink {
-            return Drink(parcel)
+    companion object CREATOR : Parcelable.Creator<DrinkDefinition> {
+        override fun createFromParcel(parcel: Parcel): DrinkDefinition {
+            return DrinkDefinition(parcel)
         }
 
-        override fun newArray(size: Int): Array<Drink?> {
+        override fun newArray(size: Int): Array<DrinkDefinition?> {
             return arrayOfNulls(size)
         }
     }

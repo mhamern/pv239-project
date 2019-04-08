@@ -14,9 +14,11 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="wrap_content"
                                                    android:layout_marginTop="16dp"/>
-        <Button android:id="@+id/my_drinks_create_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_drinks_create_button_text"/>
     </LinearLayout>
+
+    <Button android:id="@+id/my_drinks_create_button"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_drinks_create_button_text"/>
 </FrameLayout>
