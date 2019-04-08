@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class DrinkDefinition (
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     var name: String = "",
-    var price: Int = 0,
+    var price: Double = 0.0,
     var volume: Double = 0.0,
     var abv: Double = 0.0,
     var category: Category = Category.BEER
@@ -19,7 +19,7 @@ data class DrinkDefinition (
     constructor(parcel: Parcel): this(
         parcel.readLong(),
         parcel.readString(),
-        parcel.readInt(),
+        parcel.readDouble(),
         parcel.readDouble(),
         parcel.readDouble(),
         Category.values()[parcel.readInt()]
@@ -38,7 +38,7 @@ data class DrinkDefinition (
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeString(name)
         if (id != null) dest?.writeLong(id)
-        dest?.writeInt(price)
+        dest?.writeDouble(price)
         dest?.writeDouble(volume)
         dest?.writeDouble(abv)
         dest?.writeInt(category.ordinal)

@@ -71,19 +71,19 @@ class MyDrinksFragment : Fragment() {
         drink1.name = "My beer"
         drink1.category = Category.BEER
         drink1.abv = 4.0
-        drink1.price = 40
+        drink1.price = 1.2
         drink1.volume = 500.0
         val drink2 = DrinkDefinition()
         drink2.name = "My wine"
         drink2.category = Category.WINE
         drink2.abv = 12.0
-        drink2.price = 80
+        drink2.price = 1.5
         drink2.volume = 200.0
         val drink3 = DrinkDefinition()
         drink3.name = "My shot"
         drink3.category = Category.COCKTAIL
         drink3.abv = 42.0
-        drink3.price = 50
+        drink3.price = 3.5
         drink3.volume = 20.0
         var drinks = listOf(
             drink1,
