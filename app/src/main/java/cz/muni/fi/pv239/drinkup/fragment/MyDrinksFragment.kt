@@ -1,54 +1,52 @@
 package cz.muni.fi.pv239.drinkup.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.recyclerview.widget.LinearLayoutManager
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.activity.EditDrinkActivity
+import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
+import cz.muni.fi.pv239.drinkup.database.entity.Category
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
+import kotlinx.android.synthetic.main.fragment_my_drinks.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [MyDrinksFragment.OnMyDrinksFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [MyDrinksFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class MyDrinksFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var adapter: DrinkDefinitionsAdapter
+
     private var listenerMyDrinks: OnMyDrinksFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_drinks, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listenerMyDrinks?.onMyDrinksFragmentInteraction(uri)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val myContext = context
+        if (myContext != null) {
+            adapter = DrinkDefinitionsAdapter(myContext)
+            my_drinks_list.adapter = adapter
+            my_drinks_list.layoutManager = LinearLayoutManager(context)
+            loadDrinkDefinitions()
+            val fab: View = view.findViewById(R.id.my_drinks_create_fab)
+            fab.setOnClickListener {
+                val intent = Intent(it.context, EditDrinkActivity::class.java)
+                it.context.startActivity(intent)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -64,6 +62,46 @@ class MyDrinksFragment : Fragment() {
         super.onDetach()
         listenerMyDrinks = null
     }
+
+
+    private fun loadDrinkDefinitions() {
+        // todo load from DB
+        val drink1 = DrinkDefinition()
+        drink1.name = "My beer"
+        drink1.category = Category.BEER
+        drink1.abv = 4.0
+        drink1.price = 1.2
+        drink1.volume = 500.0
+        val drink2 = DrinkDefinition()
+        drink2.name = "My wine"
+        drink2.category = Category.WINE
+        drink2.abv = 12.0
+        drink2.price = 1.5
+        drink2.volume = 200.0
+        val drink3 = DrinkDefinition()
+        drink3.name = "My shot"
+        drink3.category = Category.COCKTAIL
+        drink3.abv = 42.0
+        drink3.price = 3.5
+        drink3.volume = 20.0
+        var drinks = listOf(
+            drink1,
+            drink2,
+            drink3,
+            drink1,
+            drink2,
+            drink3
+        )
+        populateList(drinks)
+    }
+
+    private fun populateList(drinks: List<DrinkDefinition>?) {
+        if (drinks == null) {
+            return
+        }
+        adapter.refreshDrinks(drinks)
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -82,22 +120,8 @@ class MyDrinksFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyDrinksFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyDrinksFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance(): MyDrinksFragment {
+            return MyDrinksFragment()
+        }
     }
 }
