@@ -69,7 +69,6 @@ class MainActivity :
         navigationView.setNavigationItemSelectedListener { menuItem ->
             handleNavMenuItemSelection(menuItem)
         }
-        createAppBar()
     }
 
     private fun createAppBar() {
