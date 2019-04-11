@@ -42,10 +42,10 @@ class DrinkDefinitionsAdapter(private var context: Context, private var drinks: 
         var alcoholVolume: TextView = itemView.findViewById(R.id.my_drinks_alcohol)
         var volume: TextView = itemView.findViewById(R.id.my_drinks_volume)
         var icon: ImageView = itemView.findViewById(R.id.my_drinks_icon)
-        var editButton: Button = itemView.findViewById(R.id.my_drinks_edit_button)
+        var editButton: View = itemView.findViewById(R.id.my_drinks_edit_button)
 
         fun bind(drink: DrinkDefinition) {
-            name.text = context.applicationContext.getString(R.string.name_attr, drink.name)
+            name.text = drink.name
             category.text = context.applicationContext.getString(R.string.category_attr, drink.category.toString())
             price.text = context.applicationContext.getString(R.string.price_attr, drink.price)
             alcoholVolume.text =  context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)

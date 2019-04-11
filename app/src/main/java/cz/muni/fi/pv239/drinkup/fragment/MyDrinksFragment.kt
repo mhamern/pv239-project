@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkActivity
 import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
@@ -43,7 +41,8 @@ class MyDrinksFragment : Fragment() {
             my_drinks_list.adapter = adapter
             my_drinks_list.layoutManager = LinearLayoutManager(context)
             loadDrinkDefinitions()
-            my_drinks_create_button.setOnClickListener {
+            val fab: View = view.findViewById(R.id.my_drinks_create_fab)
+            fab.setOnClickListener {
                 val intent = Intent(it.context, EditDrinkActivity::class.java)
                 it.context.startActivity(intent)
             }

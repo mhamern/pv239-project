@@ -6,13 +6,16 @@
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="200dp"
-        app:contentPadding="10dp"
+        android:layout_marginLeft="@dimen/mtrl_card_spacing"
+        android:layout_marginTop="@dimen/mtrl_card_spacing"
+        android:layout_marginRight="@dimen/mtrl_card_spacing"
+        app:cardCornerRadius="5dp"
         app:cardElevation="@android:dimen/thumbnail_height">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                       android:layout_width="match_parent"
                       android:layout_height="match_parent"
+                      android:layout_margin="8dp"
                       android:orientation="vertical"
                       android:id="@+id/linearLayout">
 
@@ -20,8 +23,11 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_gravity="start"
+                        android:scaleType="centerCrop"
                         android:id="@+id/my_drinks_icon"
+                        android:src="@mipmap/create_drink"
                 />
+
                 <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -30,31 +36,37 @@
 
                         <TextView android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
+                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
                                   android:id="@+id/my_drinks_name"/>
 
                         <TextView android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
+                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                                   android:id="@+id/my_drinks_category"/>
 
                         <TextView android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
+                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                                   android:id="@+id/my_drinks_price"/>
 
                         <TextView android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
+                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                                   android:id="@+id/my_drinks_alcohol"/>
 
                         <TextView android:layout_width="wrap_content"
                                   android:layout_height="wrap_content"
+                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                                   android:id="@+id/my_drinks_volume"/>
 
                 </LinearLayout>
 
-                <Button android:layout_width="wrap_content"
+                <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_drink_edit_button"
                         android:id="@+id/my_drinks_edit_button"
                         android:layout_gravity="end"
-                        android:textColor="@color/colorAccent"/>
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
         </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
