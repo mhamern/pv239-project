@@ -10,7 +10,7 @@ import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import kotlinx.android.synthetic.main.activity_edit_drink.*
 
-class EditDrinkActivity : AppCompatActivity() {
+class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     private var isEditMode = false
 

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.muni.fi.pv239.drinkup.R
-import cz.muni.fi.pv239.drinkup.activity.EditDrinkActivity
+import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
@@ -43,7 +43,7 @@ class MyDrinksFragment : Fragment() {
             loadDrinkDefinitions()
             val fab: View = view.findViewById(R.id.my_drinks_create_fab)
             fab.setOnClickListener {
-                val intent = Intent(it.context, EditDrinkActivity::class.java)
+                val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
                 it.context.startActivity(intent)
             }
         }

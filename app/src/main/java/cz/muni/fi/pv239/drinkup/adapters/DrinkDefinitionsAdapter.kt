@@ -5,12 +5,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cz.muni.fi.pv239.drinkup.R
-import cz.muni.fi.pv239.drinkup.activity.EditDrinkActivity
+import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 
 class DrinkDefinitionsAdapter(private var context: Context, private var drinks: List<DrinkDefinition> =
@@ -55,7 +54,7 @@ class DrinkDefinitionsAdapter(private var context: Context, private var drinks: 
             alcoholVolume.text =  context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)
             volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
             editButton.setOnClickListener {
-                val intent = Intent(context, EditDrinkActivity::class.java)
+                val intent = Intent(context, EditDrinkDefinitionActivity::class.java)
                 intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
                 context.startActivity(intent)
             }

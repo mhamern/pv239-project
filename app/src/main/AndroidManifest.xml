@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activity.EditDrinkActivity"
+                android:name=".activity.EditDrinkDefinitionActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
