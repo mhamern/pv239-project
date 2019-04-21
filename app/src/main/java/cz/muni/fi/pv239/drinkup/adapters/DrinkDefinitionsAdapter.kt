@@ -16,6 +16,10 @@ import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 class DrinkDefinitionsAdapter(private var context: Context, private var drinks: List<DrinkDefinition> =
     listOf()): RecyclerView.Adapter<DrinkDefinitionsAdapter.ViewHolder>() {
 
+    companion object {
+        @JvmStatic val INTENT_EXTRA_EDIT_DRINK = "DRINK_TO_EDIT"
+    }
+
     fun refreshDrinks(drinks: List<DrinkDefinition>) {
         this.drinks = drinks
         notifyDataSetChanged()
@@ -52,7 +56,7 @@ class DrinkDefinitionsAdapter(private var context: Context, private var drinks: 
             volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
             editButton.setOnClickListener {
                 val intent = Intent(context, EditDrinkActivity::class.java)
-                intent.putExtra("DRINK_TO_EDIT", drink)
+                intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
                 context.startActivity(intent)
             }
             // TODO: load icon

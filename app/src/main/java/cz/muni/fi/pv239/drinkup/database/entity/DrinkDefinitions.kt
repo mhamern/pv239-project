@@ -36,8 +36,13 @@ data class DrinkDefinition (
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
+        if (id != null) {
+            dest?.writeLong(id)
+        }
+        else {
+            dest?.writeLong(0)
+        }
         dest?.writeString(name)
-        if (id != null) dest?.writeLong(id)
         dest?.writeDouble(price)
         dest?.writeDouble(volume)
         dest?.writeDouble(abv)
