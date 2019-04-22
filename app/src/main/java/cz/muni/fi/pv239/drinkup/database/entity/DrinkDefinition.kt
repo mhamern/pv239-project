@@ -5,12 +5,12 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "DrinkDefinitions")
+@Entity(tableName = "DrinkDefinition")
 data class DrinkDefinition (
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     var name: String = "",
     var price: Double = 0.0,
-    var volume: Double = 0.0,
+    var volume: Int = 0,
     var abv: Double = 0.0,
     var category: Category = Category.BEER
 ): Parcelable {
@@ -20,7 +20,7 @@ data class DrinkDefinition (
         parcel.readLong(),
         parcel.readString() ?: "",
         parcel.readDouble(),
-        parcel.readDouble(),
+        parcel.readInt(),
         parcel.readDouble(),
         Category.values()[parcel.readInt()]
     )
@@ -44,7 +44,7 @@ data class DrinkDefinition (
         }
         dest?.writeString(name)
         dest?.writeDouble(price)
-        dest?.writeDouble(volume)
+        dest?.writeInt(volume)
         dest?.writeDouble(abv)
         dest?.writeInt(category.ordinal)
     }

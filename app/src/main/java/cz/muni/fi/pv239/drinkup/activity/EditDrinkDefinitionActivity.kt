@@ -2,12 +2,15 @@ package cz.muni.fi.pv239.drinkup.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
+import cz.muni.fi.pv239.drinkup.input.filters.InputFilterDecimalPointNumbersCount
+import cz.muni.fi.pv239.drinkup.input.filters.InputFilterMinMax
 import kotlinx.android.synthetic.main.activity_edit_drink.*
 
 class EditDrinkDefinitionActivity : AppCompatActivity() {
@@ -23,10 +26,16 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         } else {
             initForCreateMode()
         }
-
+        addFilters()
         if (savedInstanceState == null) {
             createAppBar()
         }
+    }
+
+    private fun addFilters() {
+        my_drinks_create_abv_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
+        my_drinks_create_price_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
+        my_drinks_create_volume_input.filters = arrayOf<InputFilter>(InputFilterMinMax(0, 999))
     }
 
     private fun resolveMode() {
@@ -59,19 +68,70 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     private fun createAppBar() {
         if (isEditMode) {
-            my_drinks_toolbar.title = "Edit Drink"
+            my_drinks_toolbar.title = getString(R.string.edit_drink)
         } else {
-            my_drinks_toolbar.title = "Create Drink"
+            my_drinks_toolbar.title = getString(R.string.create_drink)
         }
         setSupportActionBar(my_drinks_toolbar)
     }
 
 
     private fun saveDrinkDefinition() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (validateUserInput()) {
+
+        }
     }
 
     private fun updateDrinkDefinition() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (validateUserInput()) {
+
+        }
     }
+
+    private fun validateUserInput(): Boolean {
+        var isValid = true
+        if (!validateName()) {
+            isValid = false
+        }
+        return isValid
+    }
+
+    private fun validateName(): Boolean {
+        var isValid = true
+        if (my_drinks_create_name_input.text.isNullOrEmpty()) {
+            isValid = false
+            my_drinks_create_name_input_layout.error = getString(R.string.error_drink_name_empty)
+        }
+        return isValid
+    }
+
+    private fun validatePrice(): Boolean {
+        var isValid = true
+        if (my_drinks_create_price_input.text.isNullOrEmpty()) {
+            isValid = false
+            my_drinks_create_price_input_layout.error = getString(R.string.error_drink_price_empty)
+        }
+        return isValid
+    }
+
+    private fun validateVolume(): Boolean {
+        var isValid = true
+        if (my_drinks_create_volume_input.text.isNullOrEmpty()) {
+            isValid = false
+            my_drinks_create_volume_input_layout.error = getString(R.string.error_drink_volume_empty)
+        }
+
+        return isValid
+
+    }
+
+    private fun validateAbv(): Boolean {
+        var isValid = true
+        if (my_drinks_create_abv_input.text.isNullOrEmpty()) {
+            isValid = false
+            my_drinks_create_abv_input_layout.error = getString(R.string.error_drink_abv_empty)
+        }
+        return isValid
+    }
+
 }

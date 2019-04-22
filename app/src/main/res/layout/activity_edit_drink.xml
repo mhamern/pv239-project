@@ -32,12 +32,15 @@
                     android:layout_margin="8dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/my_drinks_create_name_input_layout"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="30"
                     android:hint="@string/my_drink_name_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/my_drinks_create_name_input"
                         android:maxLines="1"
                         android:lines="1"
+                        android:maxLength="30"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -66,7 +69,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/my_drinks_create_price_input"
-                        android:inputType="phone"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:lines="1"
                         android:layout_width="match_parent"
@@ -83,7 +86,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/my_drinks_create_abv_input"
-                        android:inputType="phone"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:lines="1"
                         android:layout_width="match_parent"
@@ -99,24 +102,21 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/my_drinks_create_volume_input"
-                        android:inputType="phone"
+                        android:inputType="number"
                         android:maxLines="1"
                         android:lines="1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
 
-        <LinearLayout android:layout_gravity="bottom"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content">
-        <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"
-                android:id="@+id/my_drinks_save_button"
-                android:layout_gravity="right"
-                style="@style/Widget.MaterialComponents.Button"/>
+            <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/save"
+                    android:id="@+id/my_drinks_save_button"
+                    android:layout_gravity="end"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
