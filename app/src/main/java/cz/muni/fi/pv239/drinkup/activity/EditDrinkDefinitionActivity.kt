@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.entity.Category
@@ -28,16 +29,14 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
                 initForCreateMode()
             }
             addFilters()
-            if (savedInstanceState == null) {
-                createAppBar()
-            }
+            createAppBar()
         }
     }
 
     private fun addFilters() {
         my_drinks_create_abv_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
         my_drinks_create_price_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
-        my_drinks_create_volume_input.filters = arrayOf<InputFilter>(InputFilterMinMax(0, 999))
+        my_drinks_create_volume_input.filters = arrayOf<InputFilter>(InputFilterMinMax(0, 1000))
     }
 
     private fun resolveMode() {
@@ -91,6 +90,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     }
 
     private fun onSaved() {
+        Toast.makeText(this, "Changes were successfully saved", Toast.LENGTH_SHORT).show()
         setResult(RESULT_OK, intent)
         finish()
     }
