@@ -1,4 +1,4 @@
-package cz.muni.fi.pv239.drinkup.input.filters
+package cz.muni.fi.pv239.drinkup.input.filter
 
 import android.text.InputFilter
 import android.text.Spanned

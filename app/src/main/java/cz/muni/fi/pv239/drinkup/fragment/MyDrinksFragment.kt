@@ -9,15 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
-import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
+import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import kotlinx.android.synthetic.main.fragment_my_drinks.*
+import android.app.Activity
+import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
 
-
-class MyDrinksFragment : Fragment() {
+class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
 
     private lateinit var adapter: DrinkDefinitionsAdapter
 
@@ -31,20 +31,22 @@ class MyDrinksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_my_drinks, container, false)
+        return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_my_drinks, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val myContext = context
-        if (myContext != null) {
-            adapter = DrinkDefinitionsAdapter(myContext)
-            my_drinks_list.adapter = adapter
-            my_drinks_list.layoutManager = LinearLayoutManager(context)
-            loadDrinkDefinitions()
-            val fab: View = view.findViewById(R.id.my_drinks_create_fab)
-            fab.setOnClickListener {
-                val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
-                it.context.startActivity(intent)
+        if (savedInstanceState == null) {
+            val myContext = context
+            if (myContext != null) {
+                adapter = DrinkDefinitionsAdapter(myContext, this)
+                my_drinks_list.adapter = adapter
+                my_drinks_list.layoutManager = LinearLayoutManager(context)
+                loadDrinkDefinitions()
+                val fab: View = view.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_create_fab)
+                fab.setOnClickListener {
+                    val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
+                    startActivityForResult(intent, 1)
+                }
             }
         }
     }
@@ -58,9 +60,21 @@ class MyDrinksFragment : Fragment() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            loadDrinkDefinitions()
+        }
+    }
+
     override fun onDetach() {
         super.onDetach()
         listenerMyDrinks = null
+    }
+
+    override fun onEditRequested(editIntent: Intent) {
+        startActivityForResult(editIntent, 1)
+
     }
 
 

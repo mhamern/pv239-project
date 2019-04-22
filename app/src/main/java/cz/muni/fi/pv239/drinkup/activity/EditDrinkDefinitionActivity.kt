@@ -6,11 +6,11 @@ import android.text.InputFilter
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import cz.muni.fi.pv239.drinkup.R
-import cz.muni.fi.pv239.drinkup.adapters.DrinkDefinitionsAdapter
+import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
-import cz.muni.fi.pv239.drinkup.input.filters.InputFilterDecimalPointNumbersCount
-import cz.muni.fi.pv239.drinkup.input.filters.InputFilterMinMax
+import cz.muni.fi.pv239.drinkup.input.filter.InputFilterDecimalPointNumbersCount
+import cz.muni.fi.pv239.drinkup.input.filter.InputFilterMinMax
 import kotlinx.android.synthetic.main.activity_edit_drink.*
 
 class EditDrinkDefinitionActivity : AppCompatActivity() {
@@ -20,15 +20,17 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_drink)
-        resolveMode()
-        if (isEditMode) {
-            initForEditMode()
-        } else {
-            initForCreateMode()
-        }
-        addFilters()
         if (savedInstanceState == null) {
-            createAppBar()
+            resolveMode()
+            if (isEditMode) {
+                initForEditMode()
+            } else {
+                initForCreateMode()
+            }
+            addFilters()
+            if (savedInstanceState == null) {
+                createAppBar()
+            }
         }
     }
 
@@ -78,19 +80,33 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     private fun saveDrinkDefinition() {
         if (validateUserInput()) {
-
+            onSaved()
         }
     }
 
     private fun updateDrinkDefinition() {
         if (validateUserInput()) {
-
+            onSaved()
         }
+    }
+
+    private fun onSaved() {
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun validateUserInput(): Boolean {
         var isValid = true
         if (!validateName()) {
+            isValid = false
+        }
+        if (!validateAbv()) {
+            isValid = false
+        }
+        if (!validatePrice()) {
+            isValid = false
+        }
+        if (!validateVolume()) {
             isValid = false
         }
         return isValid
@@ -133,5 +149,4 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         }
         return isValid
     }
-
 }
