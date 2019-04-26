@@ -3,6 +3,9 @@ package cz.muni.fi.pv239.drinkup.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputFilter
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -20,7 +23,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_drink)
+        setContentView(cz.muni.fi.pv239.drinkup.R.layout.activity_edit_drink)
         if (savedInstanceState == null) {
             resolveMode()
             if (isEditMode) {
@@ -31,6 +34,32 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
             addFilters()
             createAppBar()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(cz.muni.fi.pv239.drinkup.R.menu.edit_drink_definition_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.edit_drink_definition_menu_save -> {
+                if (isEditMode) {
+                    updateDrinkDefinition()
+                }
+                else {
+                    saveDrinkDefinition()
+                }
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     private fun addFilters() {
@@ -52,28 +81,24 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         val spinner: Spinner = my_drinks_create_category_spinner
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, Category.values())
         spinner.setSelection(drinkDefinition.category.ordinal)
-        my_drinks_save_button.setOnClickListener {
-            updateDrinkDefinition()
-        }
     }
 
 
     private fun initForCreateMode() {
         val spinner: Spinner = my_drinks_create_category_spinner
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, Category.values())
-        my_drinks_save_button.setOnClickListener {
-            saveDrinkDefinition()
-        }
-
     }
 
     private fun createAppBar() {
         if (isEditMode) {
-            my_drinks_toolbar.title = getString(R.string.edit_drink)
+            my_drinks_toolbar.title = getString(cz.muni.fi.pv239.drinkup.R.string.edit_drink)
         } else {
-            my_drinks_toolbar.title = getString(R.string.create_drink)
+            my_drinks_toolbar.title = getString(cz.muni.fi.pv239.drinkup.R.string.create_drink)
         }
         setSupportActionBar(my_drinks_toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 
@@ -116,7 +141,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         var isValid = true
         if (my_drinks_create_name_input.text.isNullOrEmpty()) {
             isValid = false
-            my_drinks_create_name_input_layout.error = getString(R.string.error_drink_name_empty)
+            my_drinks_create_name_input_layout.error = getString(cz.muni.fi.pv239.drinkup.R.string.error_drink_name_empty)
         }
         return isValid
     }
@@ -125,7 +150,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         var isValid = true
         if (my_drinks_create_price_input.text.isNullOrEmpty()) {
             isValid = false
-            my_drinks_create_price_input_layout.error = getString(R.string.error_drink_price_empty)
+            my_drinks_create_price_input_layout.error = getString(cz.muni.fi.pv239.drinkup.R.string.error_drink_price_empty)
         }
         return isValid
     }
@@ -134,7 +159,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         var isValid = true
         if (my_drinks_create_volume_input.text.isNullOrEmpty()) {
             isValid = false
-            my_drinks_create_volume_input_layout.error = getString(R.string.error_drink_volume_empty)
+            my_drinks_create_volume_input_layout.error = getString(cz.muni.fi.pv239.drinkup.R.string.error_drink_volume_empty)
         }
 
         return isValid
@@ -145,7 +170,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         var isValid = true
         if (my_drinks_create_abv_input.text.isNullOrEmpty()) {
             isValid = false
-            my_drinks_create_abv_input_layout.error = getString(R.string.error_drink_abv_empty)
+            my_drinks_create_abv_input_layout.error = getString(cz.muni.fi.pv239.drinkup.R.string.error_drink_abv_empty)
         }
         return isValid
     }
