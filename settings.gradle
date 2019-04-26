@@ -1,1 +1,1 @@
-include ':app', ':drinkupwearable'
+include ':drinkup.app', ':drinkup.wearable'

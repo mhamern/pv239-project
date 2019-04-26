@@ -1,4 +1,4 @@
-package cz.muni.fi.pv239.drinkupwearable
+package cz.muni.fi.pv239.drinkup
 
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
