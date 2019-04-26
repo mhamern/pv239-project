@@ -18,6 +18,7 @@ class MainActivity : WearableActivity(),
 
     companion object {
         @JvmStatic val CAPABILITY_PHONE_APP = "verify_remote_drinkup_phone_app"
+        @JvmStatic val ADD_DRINK_MESSAGE_PATH = "/add_drink"
     }
 
     private var androidPhoneNodeWithApp: Node? = null
@@ -26,6 +27,7 @@ class MainActivity : WearableActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setAmbientEnabled()
+        initAddDrinkButton()
     }
 
     override fun onPause() {
@@ -59,7 +61,6 @@ class MainActivity : WearableActivity(),
 
     private fun verifyNodeAndUpdateUI() {
         if (androidPhoneNodeWithApp != null) {
-          // TODO: Add code to communicate with phone app via api)
             no_paired_phone_text.visibility = View.INVISIBLE
             main_layout.visibility = View.VISIBLE
         }
@@ -69,15 +70,42 @@ class MainActivity : WearableActivity(),
         }
     }
 
+
     private fun checkIfPhoneHasApp() {
        val capabilityInfoTask: Task<CapabilityInfo> = Wearable.getCapabilityClient(this).getCapability(
            CAPABILITY_PHONE_APP, CapabilityClient.FILTER_ALL)
         capabilityInfoTask.addOnCompleteListener {
             if (it.isSuccessful) {
-                val nodes = it.result?.nodes ?: Collections.emptySet()
+                val result = it.result
+                val nodes = result?.nodes ?: Collections.emptySet()
                 androidPhoneNodeWithApp = pickBestNodeId(nodes)
             }
             verifyNodeAndUpdateUI()
+        }
+    }
+
+    private fun initAddDrinkButton() {
+        add_drink_button.setOnClickListener {
+            val id = androidPhoneNodeWithApp?.id
+            if (id != null)
+                requestAddDrink(id)
+        }
+    }
+
+    private fun requestAddDrink(id: String) {
+        id.also { nodeId ->
+            val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
+                nodeId,
+                ADD_DRINK_MESSAGE_PATH,
+                null
+            ).apply {
+                addOnSuccessListener {
+
+                }
+                addOnFailureListener {
+
+                }
+            }
         }
     }
 

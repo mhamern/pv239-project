@@ -3,6 +3,8 @@ package cz.muni.fi.pv239.drinkup.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Config.LOGD
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -14,10 +16,7 @@ import cz.muni.fi.pv239.drinkup.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.wearable.CapabilityClient
-import com.google.android.gms.wearable.CapabilityInfo
-import com.google.android.gms.wearable.Node
-import com.google.android.gms.wearable.Wearable
+import com.google.android.gms.wearable.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -26,7 +25,10 @@ class MainActivity : AppCompatActivity(),
     HistoryFragment.OnHistoryFragmentInteractionListener,
     AchievementsFragment.OnAchievementsFragmentInteractionListener,
     MyDrinksFragment.OnMyDrinksFragmentInteractionListener,
+    MessageClient.OnMessageReceivedListener,
     CapabilityClient.OnCapabilityChangedListener {
+
+    private val TAG = "MainActivity"
 
     private var allConnectedNodes: List<Node> = Collections.emptyList()
     private var wearNodesWithApp: Set<Node> = Collections.emptySet()
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         @JvmStatic val CAPABILITY_WEAR_APP = "verify_remote_drinkup_wear_app"
+        @JvmStatic val ADD_DRINK_MESSAGE_PATH = "/add_drink"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +96,13 @@ class MainActivity : AppCompatActivity(),
 
     override fun onMyDrinksFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        if (messageEvent.path == ADD_DRINK_MESSAGE_PATH) {
+            Log.i(TAG, "Received add message event from wearable ${messageEvent.sourceNodeId}")
+            // TODO: start session and add favourite drink OR add last drink to existing session
+        }
     }
 
     private fun createDrawer() {
@@ -197,7 +207,8 @@ class MainActivity : AppCompatActivity(),
 
     private fun verifyNodeAndStartCommunication() {
         if (!allConnectedNodes.isEmpty() && !wearNodesWithApp.isEmpty()) {
-            // TODO: Communicate with wear app
+            //sendUsersFavoriteDrinkDefinition(wearNodesWithApp)
         }
     }
+
 }
