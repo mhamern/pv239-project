@@ -63,9 +63,15 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     }
 
     private fun addFilters() {
-        my_drinks_create_abv_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
-        my_drinks_create_price_input.filters = arrayOf<InputFilter>(InputFilterDecimalPointNumbersCount(2, 2))
-        my_drinks_create_volume_input.filters = arrayOf<InputFilter>(InputFilterMinMax(0, 1000))
+        my_drinks_create_abv_input.filters = arrayOf<InputFilter>(
+            InputFilterDecimalPointNumbersCount(2, 2, this)
+        )
+        my_drinks_create_price_input.filters = arrayOf<InputFilter>(
+            InputFilterDecimalPointNumbersCount(2, 2, this)
+        )
+        my_drinks_create_volume_input.filters = arrayOf<InputFilter>(
+            InputFilterMinMax(0, 1000)
+        )
     }
 
     private fun resolveMode() {
