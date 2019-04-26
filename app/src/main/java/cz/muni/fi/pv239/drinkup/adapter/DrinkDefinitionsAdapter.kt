@@ -65,7 +65,6 @@ class DrinkDefinitionsAdapter(
                 editListener.onEditRequested(intent)
             }
             // TODO: load icon
-
         }
 
     }
