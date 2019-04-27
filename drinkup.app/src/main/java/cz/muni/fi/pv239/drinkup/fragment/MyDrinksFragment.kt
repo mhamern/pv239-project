@@ -34,6 +34,11 @@ class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
 
     private var loadDrinkDefsSubscription: Disposable? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
