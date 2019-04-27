@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
+import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class DrinkDefinitionsAdapter(
@@ -64,7 +67,26 @@ class DrinkDefinitionsAdapter(
                 intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
                 editListener.onEditRequested(intent)
             }
-            // TODO: load icon
+            loadIcon(drink.category)
+        }
+
+        private fun loadIcon(category: Category) {
+            when (category) {
+                Category.BEER -> {
+                    icon.setImageResource(R.mipmap.beer)
+                }
+                Category.WINE -> {
+                    icon.setImageResource(R.mipmap.wine)
+
+                }
+                Category.COCKTAIL -> {
+                    icon.setImageResource(R.mipmap.cocktail)
+
+                }
+                Category.SPIRIT -> {
+                    icon.setImageResource(R.mipmap.spirit)
+                }
+            }
         }
 
     }

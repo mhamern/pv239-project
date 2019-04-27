@@ -20,12 +20,12 @@
                       android:id="@+id/linearLayout">
 
                 <ImageView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_width="match_parent"
                         android:layout_gravity="start"
                         android:scaleType="centerCrop"
                         android:id="@+id/my_drinks_icon"
-                        android:src="@mipmap/create_drink"
+                        android:src="@mipmap/beer"
                 />
 
                 <LinearLayout

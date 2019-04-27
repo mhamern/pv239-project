@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.room.RxRoom
-import com.google.android.gms.tasks.Task
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
@@ -23,7 +22,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_drink.*
-import java.util.*
 
 class EditDrinkDefinitionActivity : AppCompatActivity() {
 
