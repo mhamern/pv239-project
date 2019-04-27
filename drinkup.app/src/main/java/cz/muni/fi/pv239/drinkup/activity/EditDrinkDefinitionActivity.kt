@@ -119,7 +119,7 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
         }
         setSupportActionBar(my_drinks_toolbar)
         supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true);
+            setDisplayHomeAsUpEnabled(true)
         }
     }
 
