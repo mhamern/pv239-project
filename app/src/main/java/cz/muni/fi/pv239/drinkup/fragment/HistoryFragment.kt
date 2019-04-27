@@ -1,14 +1,20 @@
 package cz.muni.fi.pv239.drinkup.fragment
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.adapter.SessionsAdapter
+import cz.muni.fi.pv239.drinkup.database.entity.Session
+import kotlinx.android.synthetic.main.fragment_history.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,26 +31,67 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class HistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var adapter: SessionsAdapter
+
     private var listener: OnHistoryFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            val myContext = context
+            if (myContext != null) {
+                adapter = SessionsAdapter(myContext)
+                drinking_session_list.adapter = adapter
+                drinking_session_list.layoutManager = LinearLayoutManager(context)
+                loadDrinkingSessions()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            loadDrinkingSessions()
+        }
+    }
+
+
+
+    private fun loadDrinkingSessions(){
+        val s1 = Session()
+        s1.title = "Session111"
+        val s2 = Session()
+        s2.title = "Session1"
+        val s3 = Session()
+        s3.title = "Session3"
+        var sessions = listOf(
+            s1,
+            s2,
+            s3,
+            s1
+        )
+        populateList(sessions)
+    }
+
+    private fun populateList(drinkingSessions: List<Session>?) {
+        if (drinkingSessions == null) {
+            return
+        }
+        adapter.refreshDrinkingSessions(drinkingSessions)
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {

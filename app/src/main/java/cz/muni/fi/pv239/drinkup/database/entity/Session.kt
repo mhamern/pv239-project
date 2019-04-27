@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Sessions")
 data class Session(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
-        val title: String? = "",
-        val drinks: List<Drink>? = null
+        var title: String = "",
+        var drinks: List<Drink> = listOf()
 ) {
 }

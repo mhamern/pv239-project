@@ -101,4 +101,5 @@
     <string name="error_drink_abv_empty">Alcohol by value cannot be empty</string>
     <string name="error_drink_volume_empty">Volume cannot be empty</string>
     <string name="decimal_point_character">.</string>
+    <string name="total_price_of_session" formatted="true">Total price of session: %1$.2f  €</string>
 </resources>
