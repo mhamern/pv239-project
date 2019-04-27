@@ -9,22 +9,35 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.room.RxRoom
+import com.google.android.gms.tasks.Task
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
+import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.dao.DrinkDefinitionDao
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import cz.muni.fi.pv239.drinkup.input.filter.InputFilterDecimalPointNumbersCount
 import cz.muni.fi.pv239.drinkup.input.filter.InputFilterMinMax
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_drink.*
+import java.util.*
 
 class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     private var isEditMode = false
+    private var db: AppDatabase? = null
+    private var drinkDefDao: DrinkDefinitionDao? = null
+    private var saveDrinkDefinitionSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(cz.muni.fi.pv239.drinkup.R.layout.activity_edit_drink)
         if (savedInstanceState == null) {
+            db = AppDatabase.getAppDatabase(this)
+            drinkDefDao = db?.drinkDefinitionDao()
             resolveMode()
             if (isEditMode) {
                 initForEditMode()
@@ -60,6 +73,11 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveDrinkDefinitionSubscription?.dispose()
     }
 
     private fun addFilters() {
@@ -110,13 +128,26 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
 
     private fun saveDrinkDefinition() {
         if (validateUserInput()) {
-            onSaved()
+            saveDrinkDefinitionSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map { db?.drinkDefinitionDao()?.insertDrinkDefiniton(createDrinkDefinitionFromInput()) ?: error("DB Error")}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    onSaved()
+                }
         }
     }
 
+
     private fun updateDrinkDefinition() {
         if (validateUserInput()) {
-            onSaved()
+            saveDrinkDefinitionSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map { db?.drinkDefinitionDao()?.updateDrinkDefinition(createDrinkDefinitionFromInput()) ?: error("DB Error")}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    onSaved()
+                }
         }
     }
 
@@ -179,5 +210,25 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
             my_drinks_create_abv_input_layout.error = getString(cz.muni.fi.pv239.drinkup.R.string.error_drink_abv_empty)
         }
         return isValid
+    }
+
+    private fun createDrinkDefinitionFromInput(): DrinkDefinition {
+        if (isEditMode) {
+            val drinkDefToUpdate = this.intent.getParcelableExtra<DrinkDefinition>(DrinkDefinitionsAdapter.INTENT_EXTRA_EDIT_DRINK)
+            drinkDefToUpdate.name = my_drinks_create_name_input.text.toString()
+            drinkDefToUpdate.abv =  my_drinks_create_abv_input.text.toString().toDouble()
+            drinkDefToUpdate.price = my_drinks_create_price_input.text.toString().toDouble()
+            drinkDefToUpdate.category = Category.values()[my_drinks_create_category_spinner.selectedItemPosition]
+            drinkDefToUpdate.volume = my_drinks_create_volume_input.text.toString().toInt()
+            return drinkDefToUpdate
+        }
+        else {
+            return DrinkDefinition(
+                name =  my_drinks_create_name_input.text.toString(),
+                abv = my_drinks_create_abv_input.text.toString().toDouble(),
+                price = my_drinks_create_price_input.text.toString().toDouble(),
+                category = Category.values()[my_drinks_create_category_spinner.selectedItemPosition],
+                volume =  my_drinks_create_volume_input.text.toString().toInt())
+        }
     }
 }

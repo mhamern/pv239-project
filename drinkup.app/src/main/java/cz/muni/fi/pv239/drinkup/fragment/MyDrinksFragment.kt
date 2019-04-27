@@ -11,21 +11,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
-import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import kotlinx.android.synthetic.main.fragment_my_drinks.*
 import android.app.Activity
+import androidx.room.RxRoom
+import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.dao.DrinkDefinitionDao
 import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+
+import java.util.*
 
 class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
 
     private lateinit var adapter: DrinkDefinitionsAdapter
 
     private var listenerMyDrinks: OnMyDrinksFragmentInteractionListener? = null
+    private var db: AppDatabase? = null
+    private var drinkDefDao: DrinkDefinitionDao? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var loadDrinkDefsSubscription: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +45,8 @@ class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
         if (savedInstanceState == null) {
             val myContext = context
             if (myContext != null) {
+                db = AppDatabase.getAppDatabase(myContext)
+                drinkDefDao = db?.drinkDefinitionDao()
                 adapter = DrinkDefinitionsAdapter(myContext, this)
                 my_drinks_list.adapter = adapter
                 my_drinks_list.layoutManager = LinearLayoutManager(context)
@@ -72,47 +81,27 @@ class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
         listenerMyDrinks = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        loadDrinkDefsSubscription?.dispose()
+    }
+
     override fun onEditRequested(editIntent: Intent) {
         startActivityForResult(editIntent, 1)
-
     }
 
 
     private fun loadDrinkDefinitions() {
-        // todo load from DB
-        val drink1 = DrinkDefinition()
-        drink1.name = "My beer"
-        drink1.category = Category.BEER
-        drink1.abv = 4.0
-        drink1.price = 1.2
-        drink1.volume = 500
-        val drink2 = DrinkDefinition()
-        drink2.name = "My wine"
-        drink2.category = Category.WINE
-        drink2.abv = 12.0
-        drink2.price = 1.5
-        drink2.volume = 200
-        val drink3 = DrinkDefinition()
-        drink3.name = "My shot"
-        drink3.category = Category.COCKTAIL
-        drink3.abv = 42.0
-        drink3.price = 3.5
-        drink3.volume = 20
-        var drinks = listOf(
-            drink1,
-            drink2,
-            drink3,
-            drink1,
-            drink2,
-            drink3
-        )
-        populateList(drinks)
+        loadDrinkDefsSubscription = RxRoom.createFlowable(db)
+            .observeOn(Schedulers.io())
+            .map { db?.drinkDefinitionDao()?.getAllDrinkDefinitions() ?: Collections.emptyList() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                populateList(it)
+            }
     }
 
-    private fun populateList(drinks: List<DrinkDefinition>?) {
-        if (drinks == null) {
-            return
-        }
+    private fun populateList(drinks: List<DrinkDefinition>) {
         adapter.refreshDrinks(drinks)
     }
 
