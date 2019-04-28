@@ -8,5 +8,4 @@ data class Session(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
         val title: String? = "",
         val drinks: List<Drink>? = null
-) {
-}
+)

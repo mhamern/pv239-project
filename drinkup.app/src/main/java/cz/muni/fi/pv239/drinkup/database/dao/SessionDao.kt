@@ -16,4 +16,5 @@ interface SessionDao {
 
     @Query("SELECT * FROM Sessions")
     fun getAllSessions(): List<Session>
+
 }
