@@ -12,26 +12,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import cz.muni.fi.pv239.drinkup.R
-import cz.muni.fi.pv239.drinkup.adapter.SessionsAdapter
-import cz.muni.fi.pv239.drinkup.database.entity.Session
+import cz.muni.fi.pv239.drinkup.adapter.DrinkingSessionsAdapter
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import kotlinx.android.synthetic.main.fragment_history.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HistoryFragment.OnHistoryFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [HistoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class HistoryFragment : Fragment() {
-    private lateinit var adapter: SessionsAdapter
+    private lateinit var adapter: DrinkingSessionsAdapter
 
     private var listener: OnHistoryFragmentInteractionListener? = null
 
@@ -50,7 +36,7 @@ class HistoryFragment : Fragment() {
         if (savedInstanceState == null) {
             val myContext = context
             if (myContext != null) {
-                adapter = SessionsAdapter(myContext)
+                adapter = DrinkingSessionsAdapter(myContext)
                 drinking_session_list.adapter = adapter
                 drinking_session_list.layoutManager = LinearLayoutManager(context)
                 loadDrinkingSessions()
@@ -68,11 +54,11 @@ class HistoryFragment : Fragment() {
 
 
     private fun loadDrinkingSessions(){
-        val s1 = Session()
+        val s1 = DrinkingSession()
         s1.title = "Session111"
-        val s2 = Session()
+        val s2 = DrinkingSession()
         s2.title = "Session1"
-        val s3 = Session()
+        val s3 = DrinkingSession()
         s3.title = "Session3"
         var sessions = listOf(
             s1,
@@ -83,7 +69,7 @@ class HistoryFragment : Fragment() {
         populateList(sessions)
     }
 
-    private fun populateList(drinkingSessions: List<Session>?) {
+    private fun populateList(drinkingSessions: List<DrinkingSession>?) {
         if (drinkingSessions == null) {
             return
         }
@@ -128,22 +114,10 @@ class HistoryFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HistoryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance(): HistoryFragment{
+            return HistoryFragment()
+        }
+
     }
 }

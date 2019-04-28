@@ -10,9 +10,9 @@ import cz.muni.fi.pv239.drinkup.database.dao.DrinkDefinitionDao
 import cz.muni.fi.pv239.drinkup.database.dao.SessionDao
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
-import cz.muni.fi.pv239.drinkup.database.entity.Session
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 
-@Database(entities = [Drink::class, Session::class, DrinkDefinition::class], version = 1, exportSchema = false)
+@Database(entities = [Drink::class, DrinkingSession::class, DrinkDefinition::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun drinkDao(): DrinkDao

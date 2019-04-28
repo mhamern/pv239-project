@@ -19,6 +19,6 @@ PV239 Android app
 * Neni standlone
 #### Interactive mode
 * Na hodinkach defaultne nejoblibenejsi piti, po pridani prvniho po zbytek vecera ukazuje naposledny pridane piti (tap to drink)
-* Pridanim prvniho piti zacnu session
+* Pridanim prvniho piti zacnu drinkingSession
 #### Ambient mode
 * Aktualni promile

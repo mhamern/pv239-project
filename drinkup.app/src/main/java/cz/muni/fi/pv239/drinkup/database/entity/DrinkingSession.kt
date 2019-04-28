@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "Sessions")
-data class Session(
+data class DrinkingSession(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
         var title: String = "",
         var drinks: List<Drink> = listOf()
