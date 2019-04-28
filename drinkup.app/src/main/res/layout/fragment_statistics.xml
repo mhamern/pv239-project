@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:android="http://schemas.android.com/apk/res/android">
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
         <Spinner
@@ -21,6 +22,6 @@
                  android:id="@+id/chart_fragment_container"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 tools:context=".fragment.StatisticsFragment">
+                 tools:context=".fragment.statistics.StatisticsFragment">
     </FrameLayout>
 </LinearLayout>
