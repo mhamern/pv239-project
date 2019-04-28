@@ -1,0 +1,22 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.takisoft.preferencex.EditTextPreference
+            android:key="pref_weight"
+            android:title="@string/pref_weight_title"
+            android:selectAllOnFocus="true"
+            android:defaultValue="0"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:digits="0123456789"
+            android:negativeButtonText="@string/cancel"
+            android:positiveButtonText="@string/ok"
+            android:maxLength="3"
+            android:maxLines="1"/>
+    <androidx.preference.ListPreference
+            android:key="pref_gender"
+            android:title="@string/gender"
+            android:defaultValue="0"
+            android:entries="@array/pref_gender_list_titles"
+            android:entryValues="@array/pref_gender_list_values"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"/>
+</androidx.preference.PreferenceScreen>

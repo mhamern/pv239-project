@@ -2,6 +2,7 @@ package cz.muni.fi.pv239.drinkup.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.InputFilter
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,6 +10,7 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.preference.PreferenceManagerFix
 import androidx.room.RxRoom
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter

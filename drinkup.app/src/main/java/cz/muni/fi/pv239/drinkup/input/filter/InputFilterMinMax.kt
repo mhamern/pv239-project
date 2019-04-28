@@ -14,7 +14,7 @@ class InputFilterMinMax(private val min: Int, private val max: Int): InputFilter
         try
         {
             val input = (dest.subSequence(0, dstart).toString() + source + dest.subSequence(dend, dest.length)).toInt()
-            if (!startsWithZero(source, dest) &&isInRange(min, max, input))
+            if (!startsWithZero(source, dest) && isInRange(min, max, input))
                 return source
         }
         catch (nfe:NumberFormatException) {}
