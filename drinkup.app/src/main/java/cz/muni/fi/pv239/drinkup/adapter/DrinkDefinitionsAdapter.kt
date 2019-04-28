@@ -12,13 +12,12 @@ import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
-import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
-import kotlinx.android.synthetic.main.activity_main.view.*
+import cz.muni.fi.pv239.drinkup.event.listener.OnEditDrinkDefinitionListener
 
 
 class DrinkDefinitionsAdapter(
     private val context: Context,
-    private val editListener: EditDrinkDefinitionListener,
+    private val onEditListener: OnEditDrinkDefinitionListener,
     private var drinks: List<DrinkDefinition> =
         listOf()
 ): RecyclerView.Adapter<DrinkDefinitionsAdapter.ViewHolder>() {
@@ -35,7 +34,7 @@ class DrinkDefinitionsAdapter(
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(cz.muni.fi.pv239.drinkup.R.layout.my_drinks_item_list, parent, false),
             context,
-            editListener
+            onEditListener
             )
     }
 
@@ -47,7 +46,7 @@ class DrinkDefinitionsAdapter(
         holder.bind(drinks[position])
     }
 
-    class ViewHolder(itemView: View, private var context: Context, private var editListener: EditDrinkDefinitionListener): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private var context: Context, private var onEditListener: OnEditDrinkDefinitionListener): RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_name)
         var category: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_category)
         var price: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_price)
@@ -65,7 +64,7 @@ class DrinkDefinitionsAdapter(
             editButton.setOnClickListener {
                 val intent = Intent(context, EditDrinkDefinitionActivity::class.java)
                 intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
-                editListener.onEditRequested(intent)
+                onEditListener.onEditRequested(intent)
             }
             loadIcon(drink.category)
         }

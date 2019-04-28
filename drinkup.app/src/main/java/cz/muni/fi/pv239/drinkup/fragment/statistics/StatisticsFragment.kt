@@ -1,4 +1,4 @@
-package cz.muni.fi.pv239.drinkup.fragment
+package cz.muni.fi.pv239.drinkup.fragment.statistics
 
 import android.content.Context
 import android.net.Uri
@@ -14,12 +14,13 @@ import android.widget.Spinner
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.enum.StatisticsOption
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod
-import kotlinx.android.synthetic.main.activity_edit_drink.*
+import cz.muni.fi.pv239.drinkup.event.listener.OnStatisticsTImePeriodChangeListener
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import java.util.*
 
 class StatisticsFragment : Fragment() {
     private var listener: OnStatisticsFragmentInteractionListener? = null
+    private var timePeriodChangeListener: OnStatisticsTImePeriodChangeListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,25 +83,44 @@ class StatisticsFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+        timePeriodChangeListener = null
+
     }
 
 
     private fun onStatisticsOptionChanged(statisticsOption: StatisticsOption) {
         when (statisticsOption) {
-            StatisticsOption.PRICE -> return
-            StatisticsOption.CATEGORIES -> return
-            StatisticsOption.VOLUME -> return
+            StatisticsOption.PRICE -> displayPriceChart()
+            StatisticsOption.CATEGORIES -> displayCategoriesChart()
+            StatisticsOption.VOLUME -> displayVolumeChart()
         }
     }
 
+
     private fun onTimePeriodChanged(statisticsTimePeriod: StatisticsTimePeriod) {
-        when (statisticsTimePeriod) {
-            StatisticsTimePeriod.LAST_WEAK -> return
-            StatisticsTimePeriod.LAST_MONTH -> return
-            StatisticsTimePeriod.LAST_YEAR -> return
-            StatisticsTimePeriod.ALL_TIME -> return
-        }
+        timePeriodChangeListener?.onTimePeriodChanged(statisticsTimePeriod)
     }
+
+    private fun displayVolumeChart() {
+        setChartFragment(VolumeChartFragment())
+    }
+
+    private fun displayCategoriesChart() {
+        setChartFragment(CategoryChartFragment())
+    }
+
+    private fun displayPriceChart() {
+        setChartFragment(PriceChartFragment())
+    }
+
+
+    private fun setChartFragment(fragment: BaseChartFragment) {
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.chart_fragment_container, fragment)
+            ?.commit()
+        timePeriodChangeListener = fragment
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

@@ -2,6 +2,6 @@ package cz.muni.fi.pv239.drinkup.event.listener
 
 import android.content.Intent
 
-interface EditDrinkDefinitionListener {
+interface OnEditDrinkDefinitionListener {
     fun onEditRequested(editIntent: Intent)
 }

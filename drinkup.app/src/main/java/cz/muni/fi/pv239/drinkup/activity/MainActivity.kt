@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.*
+import cz.muni.fi.pv239.drinkup.fragment.statistics.StatisticsFragment
 
 
 class MainActivity : AppCompatActivity(),

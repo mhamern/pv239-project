@@ -17,14 +17,14 @@ import android.app.Activity
 import androidx.room.RxRoom
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDefinitionDao
-import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
+import cz.muni.fi.pv239.drinkup.event.listener.OnEditDrinkDefinitionListener
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 import java.util.*
 
-class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
+class MyDrinksFragment : Fragment(), OnEditDrinkDefinitionListener {
 
     private lateinit var adapter: DrinkDefinitionsAdapter
 
