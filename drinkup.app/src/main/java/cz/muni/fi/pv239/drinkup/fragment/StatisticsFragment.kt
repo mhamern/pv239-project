@@ -7,53 +7,71 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.enum.StatisticsOption
+import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod
+import kotlinx.android.synthetic.main.activity_edit_drink.*
+import kotlinx.android.synthetic.main.fragment_statistics.*
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [StatisticsFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [StatisticsFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class StatisticsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private var listener: OnStatisticsFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.retainInstance = true
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_statistics, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onStatisticsFragmentInteraction(uri)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initStatisticsOptions(view.context)
+    }
+
+    private fun initStatisticsOptions(context: Context) {
+        val timePeriodSpinner: Spinner = statistics_time_period_spinner
+        timePeriodSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsTimePeriod.values())
+        timePeriodSpinner.setSelection(StatisticsTimePeriod.LAST_WEAK.ordinal)
+
+        timePeriodSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                onTimePeriodChanged(StatisticsTimePeriod.values()[position])
+            }
+        }
+
+        val statisticsOptionSpinner: Spinner = statistics_option_spinner
+        statisticsOptionSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsOption.values())
+        statisticsOptionSpinner.setSelection(StatisticsOption.CATEGORIES.ordinal)
+
+        statisticsOptionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                onStatisticsOptionChanged(StatisticsOption.values()[position])
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        val date = Date()
+
         if (context is OnStatisticsFragmentInteractionListener) {
             listener = context
         } else {
@@ -64,6 +82,24 @@ class StatisticsFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+
+    private fun onStatisticsOptionChanged(statisticsOption: StatisticsOption) {
+        when (statisticsOption) {
+            StatisticsOption.PRICE -> return
+            StatisticsOption.CATEGORIES -> return
+            StatisticsOption.VOLUME -> return
+        }
+    }
+
+    private fun onTimePeriodChanged(statisticsTimePeriod: StatisticsTimePeriod) {
+        when (statisticsTimePeriod) {
+            StatisticsTimePeriod.LAST_WEAK -> return
+            StatisticsTimePeriod.LAST_MONTH -> return
+            StatisticsTimePeriod.LAST_YEAR -> return
+            StatisticsTimePeriod.ALL_TIME -> return
+        }
     }
 
     /**
@@ -93,12 +129,7 @@ class StatisticsFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            StatisticsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() =
+            StatisticsFragment()
     }
 }

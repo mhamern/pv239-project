@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragment.StatisticsFragment">
+<LinearLayout android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Spinner
+                android:id="@+id/statistics_time_period_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+        </Spinner>
 
-</FrameLayout>
+        <Spinner
+                android:id="@+id/statistics_option_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+        </Spinner>
+    </LinearLayout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 xmlns:tools="http://schemas.android.com/tools"
+                 android:id="@+id/chart_fragment_container"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 tools:context=".fragment.StatisticsFragment">
+    </FrameLayout>
+</LinearLayout>
