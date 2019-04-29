@@ -1,10 +1,13 @@
 package cz.muni.fi.pv239.drinkup.activity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity(),
             createDrawer()
             createAppBar()
             showOverview()
+            setAchievements()
         }
     }
 
@@ -207,6 +211,22 @@ class MainActivity : AppCompatActivity(),
     private fun verifyNodeAndStartCommunication() {
         if (!allConnectedNodes.isEmpty() && !wearNodesWithApp.isEmpty()) {
             //sendUsersFavoriteDrinkDefinition(wearNodesWithApp)
+        }
+    }
+
+    private fun setAchievements() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sharedPreferences.getBoolean("firstRun", true)) {
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("firstRun", false)
+
+            editor.putInt("ach_drink5beer", 0)
+
+            editor.putInt("ach_drink20beer", 0)
+
+            editor.putInt("ach_drink_5shots", 0)
+
+            editor.commit()
         }
     }
 
