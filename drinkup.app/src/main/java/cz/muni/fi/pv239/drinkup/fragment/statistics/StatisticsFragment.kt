@@ -42,7 +42,7 @@ class StatisticsFragment : Fragment() {
     private fun initStatisticsOptions(context: Context) {
         val timePeriodSpinner: Spinner = statistics_time_period_spinner
         timePeriodSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsTimePeriod.values())
-        timePeriodSpinner.setSelection(StatisticsTimePeriod.LAST_WEAK.ordinal)
+        timePeriodSpinner.setSelection(StatisticsTimePeriod.LAST_WEEK.ordinal)
 
         timePeriodSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -102,15 +102,15 @@ class StatisticsFragment : Fragment() {
     }
 
     private fun displayVolumeChart() {
-        setChartFragment(VolumeChartFragment())
+        setChartFragment(VolumeChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
     private fun displayCategoriesChart() {
-        setChartFragment(CategoryChartFragment())
+        setChartFragment(CategoryChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
     private fun displayPriceChart() {
-        setChartFragment(PriceChartFragment())
+        setChartFragment(PriceChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
 

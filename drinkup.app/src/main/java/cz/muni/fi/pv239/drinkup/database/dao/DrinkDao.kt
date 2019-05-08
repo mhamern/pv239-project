@@ -16,4 +16,6 @@ interface DrinkDao {
 
     @Query("SELECT * FROM Drinks")
     fun getAllDrinks(): List<Drink>
+
+    
 }

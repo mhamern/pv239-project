@@ -21,12 +21,9 @@ android {
     }
 }
 
-def klockVersion = "1.4.0"
-
 
 repositories {
     maven { url 'https://jitpack.io' }
-    maven { url "https://dl.bintray.com/soywiz/soywiz" }
 }
 
 dependencies {
@@ -44,9 +41,7 @@ dependencies {
     implementation 'com.takisoft.preferencex:preferencex:1.0.0'
     implementation 'android.arch.persistence.room:rxjava2:1.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
-    // For multiplatform projects, since klock is published without metadata
-    implementation "com.soywiz:klock-metadata:$klockVersion" // Common
+    implementation 'com.github.hotchemi:khronos:0.9.0'
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     testImplementation 'junit:junit:4.12'
