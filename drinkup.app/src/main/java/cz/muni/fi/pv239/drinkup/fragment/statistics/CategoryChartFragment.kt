@@ -20,15 +20,11 @@ import android.graphics.Color
 import android.location.Location
 import android.location.LocationProvider
 import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.data.PieData
-import khronos.Dates
 import kotlinx.android.synthetic.main.fragment_category_chart.*
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.components.LegendEntry
 
 
 class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
@@ -57,6 +53,12 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         loadData(initialTimePeriod)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (chartDataSubscription?.isDisposed == false)
+        chartDataSubscription?.dispose()
+    }
+
     private fun initDb() {
         val myContext = context
         if (myContext != null) {
@@ -70,7 +72,6 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         chart?.setUsePercentValues(true)
         chart?.description?.isEnabled = false
         chart?.setExtraOffsets(5F, 10F, 5F, 5F)
-        chart?.animateY(1400, Easing.EaseInOutQuad)
         chart?.setEntryLabelColor(Color.WHITE)
         chart?.setEntryLabelTextSize(12f)
     }
@@ -83,7 +84,7 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
             .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-            .map { DrinkByDateFilter().filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+           // .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 drawChart(it)
@@ -106,7 +107,9 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         dataSet.colors = colors
 
         chart?.highlightValues(null)
-
+        chart?.data?.notifyDataChanged()
+        chart?.notifyDataSetChanged()
+        chart?.animateY(1400, Easing.EaseInOutQuad)
         chart?.invalidate()
     }
 
@@ -136,5 +139,4 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         ) }
         return chartEntries
     }
-
 }
