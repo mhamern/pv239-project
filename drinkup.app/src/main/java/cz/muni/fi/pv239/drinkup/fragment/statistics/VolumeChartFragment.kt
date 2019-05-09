@@ -25,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_price_chart.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
@@ -97,20 +98,20 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
             .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-            //.map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+            .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                drawChart(it)
+                drawChart(it, timePeriod)
             }
     }
 
-    private fun drawChart(drinks: List<Drink>) {
-        val entries = calculateBarChartEntries(drinks)
+    private fun drawChart(drinks: List<Drink>, timePeriod: StatisticsTimePeriod) {
+        val entries = calculateBarChartEntries(drinks, timePeriod)
         val dataSet = BarDataSet(entries, "Volume")
         val colors = createColors()
 
         val data = BarData(dataSet)
-        data.setValueFormatter(ChartValueFormatter("ml"))
+        data.setValueFormatter(ChartValueFormatter("l"))
         data.setValueTextSize(15f)
         data.setValueTextColor(Color.WHITE)
         chart?.data = data
@@ -131,22 +132,29 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
         return colors
     }
 
-    private fun calculateBarChartEntries(drinks: List<Drink>): List<BarEntry> {
-        val categoriesCountMap = HashMap<Category, Int>()
-        val chartEntries = ArrayList<BarEntry>()
-
-        Category.values().forEach { categoriesCountMap[it] = 0 }
-        drinks.forEach {
-            val categoryCount = (categoriesCountMap[it.category])
-            if (categoryCount != null) categoriesCountMap[it.category] = categoryCount + 1
+    private fun calculateBarChartEntries(drinks: List<Drink>, timePeriod: StatisticsTimePeriod): List<BarEntry> {
+        return when (timePeriod) {
+            StatisticsTimePeriod.LAST_WEEK -> calculateBarChartEntries(drinks, Calendar.DAY_OF_WEEK)
+            StatisticsTimePeriod.LAST_MONTH -> calculateBarChartEntries(drinks, Calendar.WEEK_OF_MONTH)
+            StatisticsTimePeriod.LAST_YEAR -> calculateBarChartEntries(drinks, Calendar.MONTH)
         }
+    }
 
-        Category.values().forEach { chartEntries.add(
-            BarEntry(
-                it.ordinal.toFloat(),
-                categoriesCountMap[it]?.toFloat() ?: 0.toFloat()
-            )
-        ) }
+    private fun calculateBarChartEntries(drinks: List<Drink>, groupByTimeParameter: Int): List<BarEntry> {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val calendar = GregorianCalendar.getInstance()
+        val groups = drinks.groupBy {
+            calendar.time = Date(it.location?.time ?: - 1)
+            calendar.get(groupByTimeParameter)
+        }
+        val chartEntries = ArrayList<BarEntry>()
+        groups.entries.forEach { group ->
+            chartEntries.add(
+                BarEntry(
+                    group.key.toFloat(),
+                    group.value.sumByDouble { it.volume }.toFloat() / 1000
+                ))
+        }
         return chartEntries
     }
 

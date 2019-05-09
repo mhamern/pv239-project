@@ -84,7 +84,7 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
             .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-           // .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+           .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 drawChart(it)
