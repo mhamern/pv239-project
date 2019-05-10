@@ -10,19 +10,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.RxRoom
 
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkingSessionsAdapter
+import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.dao.SessionDao
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_history.*
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class HistoryFragment : Fragment() {
     private lateinit var adapter: DrinkingSessionsAdapter
 
     private var listener: OnHistoryFragmentInteractionListener? = null
+    private var db: AppDatabase? = null
+    private var drinkingSessionDao: SessionDao? = null
+
+    private var loadDrinkingSessionSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        this.retainInstance = true
     }
 
     override fun onCreateView(
@@ -36,12 +48,28 @@ class HistoryFragment : Fragment() {
         if (savedInstanceState == null) {
             val myContext = context
             if (myContext != null) {
+                db = AppDatabase.getAppDatabase(myContext)
+                drinkingSessionDao = db?.sessionDao()
                 adapter = DrinkingSessionsAdapter(myContext)
                 drinking_session_list.adapter = adapter
                 drinking_session_list.layoutManager = LinearLayoutManager(context)
                 loadDrinkingSessions()
             }
         }
+    }
+
+    private fun loadDrinkingSessions(){
+        loadDrinkingSessionSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getAllSessions() ?: Collections.emptyList()}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    populateList(it)
+                }
+    }
+
+    private fun populateList(drinkingSessions: List<DrinkingSession>) {
+        adapter.refreshDrinkingSessions(drinkingSessions)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -51,32 +79,10 @@ class HistoryFragment : Fragment() {
         }
     }
 
-
-
-    private fun loadDrinkingSessions(){
-        val s1 = DrinkingSession()
-        s1.title = "Session111"
-        val s2 = DrinkingSession()
-        s2.title = "Session1"
-        val s3 = DrinkingSession()
-        s3.title = "Session3"
-        var sessions = listOf(
-            s1,
-            s2,
-            s3,
-            s1
-        )
-        populateList(sessions)
+    override fun onDestroy() {
+        super.onDestroy()
+        loadDrinkingSessionSubscription?.dispose()
     }
-
-    private fun populateList(drinkingSessions: List<DrinkingSession>?) {
-        if (drinkingSessions == null) {
-            return
-        }
-        adapter.refreshDrinkingSessions(drinkingSessions)
-    }
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
