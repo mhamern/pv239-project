@@ -5,25 +5,32 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/linearLayout_achievement"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
 
         <TextView
                 android:id="@+id/text_achievement"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical|left"
-/>
-        <ProgressBar
-                android:id="@+id/progress_achievement"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:padding="3dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:gravity="center_vertical"/>
+        <TextView
+                android:id="@+id/text_achievement2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:layout_alignParentRight="true"/>
 
-    </LinearLayout>
+    </RelativeLayout>
+    <ProgressBar
+            android:id="@+id/progress_achievement"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressTint="#8BC34A"/>
 </LinearLayout>

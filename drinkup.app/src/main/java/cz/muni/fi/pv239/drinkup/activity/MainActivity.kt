@@ -224,7 +224,11 @@ class MainActivity : AppCompatActivity(),
 
             editor.putInt("ach_drink20beer", 0)
 
-            editor.putInt("ach_drink_5shots", 0)
+            editor.putInt("ach_drink5shots", 0)
+
+            editor.putInt("ach_drink20shots", 0)
+
+            editor.putInt("ach_drink100beer", 0)
 
             editor.commit()
         }

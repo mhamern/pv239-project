@@ -23,10 +23,11 @@ class AchievementsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         var sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val achievements = listOf(
-            Achievement(getString(R.string.ach_drink5beer), (sharedPreferences.getInt("ach_drink5beer", 0).toDouble()/5*100).toInt()),
-            Achievement(getString(R.string.ach_drink20beer), (sharedPreferences.getInt("ach_drink20beer", 0).toDouble()/5*100).toInt()),
-            Achievement(getString(R.string.ach_drink20beer), 50),
-            Achievement(getString(R.string.ach_drink20beer), 100)
+            Achievement(getString(R.string.ach_drink5beer), (sharedPreferences.getInt("ach_drink5beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink5beer", 0), 5),
+            Achievement(getString(R.string.ach_drink20beer), (sharedPreferences.getInt("ach_drink20beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink20beer", 0), 20),
+            Achievement(getString(R.string.ach_drink100beer), (sharedPreferences.getInt("ach_drink100beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink100beer", 0), 100),
+            Achievement(getString(R.string.ach_drink5shots), (sharedPreferences.getInt("ach_drink5shots", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink5shots", 0), 5),
+            Achievement(getString(R.string.ach_drink20shots), (sharedPreferences.getInt("ach_drink20shots", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink20shots", 0), 20)
         )
         recycler_view_achievements.layoutManager = LinearLayoutManager(this.context)
         recycler_view_achievements.adapter = AchievementsAdapter(achievements)

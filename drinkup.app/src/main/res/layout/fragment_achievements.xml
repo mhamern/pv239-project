@@ -3,7 +3,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context=".fragment.AchievementsFragment">
+              tools:context=".fragment.AchievementsFragment"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_achievements"

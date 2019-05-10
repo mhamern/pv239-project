@@ -4,9 +4,11 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Achievements -->
-    <string name="ach_drink5beer">Drink 5 beers in one sesssion</string>
+    <string name="ach_drink5beer">Drink 5 beers</string>
     <string name="ach_drink20beer">Drink 20 beers</string>
-    <string name="ach_drink5shots">Drink 5 shots in one session</string>
+    <string name="ach_drink100beer">Drink 100 beers</string>
+    <string name="ach_drink5shots">Drink 5 shots</string>
+    <string name="ach_drink20shots">Drink 20 shots</string>
 
     <!-- Strings related to Settings -->
 

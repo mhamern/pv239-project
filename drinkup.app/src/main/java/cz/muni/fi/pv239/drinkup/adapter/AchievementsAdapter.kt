@@ -15,12 +15,12 @@ class AchievementsAdapter(val achievements: List<Achievement>): RecyclerView.Ada
     override fun onBindViewHolder(holder: AchievementViewholder, position: Int) {
         var achievement = achievements[position]
         holder.view.text_achievement.text = achievement.text
-        holder.view.progress_achievement.progress = achievement.progress
-        if(achievement.progress >= 100) {
-            holder.view.linearLayout_achievement.background.setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY)
+        if (achievement.actual < achievement.max) {
+            holder.view.text_achievement2.text = achievement.actual.toString() + "/" + achievement.max.toString()
         } else {
-            holder.view.linearLayout_achievement.background.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
+            holder.view.text_achievement2.text = achievement.max.toString() + "/" + achievement.max.toString()
         }
+        holder.view.progress_achievement.progress = achievement.progress
     }
 
     class AchievementViewholder(val view: View): RecyclerView.ViewHolder(view)
