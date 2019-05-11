@@ -29,6 +29,12 @@
                 android:name=".activity.EditDrinkDefinitionActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activity.DrinkingSessionDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Session Detail"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 
 </manifest>
