@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(tableName = "Drinks")
 data class Drink(
@@ -14,7 +15,8 @@ data class Drink(
         var volume: Double = 0.0,
         var abv: Double = 0.0,
         var category: Category = Category.BEER,
-        var location: Location? = null
+        var location: Location? = null,
+        var date: Date = Date()
 ): Parcelable {
 
 
@@ -25,7 +27,8 @@ data class Drink(
                 parcel.readDouble(),
                 parcel.readDouble(),
                 Category.values()[parcel.readInt()],
-                parcel.readParcelable(Location::class.java.classLoader)
+                parcel.readParcelable(Location::class.java.classLoader),
+                Date(parcel.readLong())
         )
 
         companion object CREATOR : Parcelable.Creator<Drink> {
@@ -46,6 +49,7 @@ data class Drink(
                 dest?.writeDouble(abv)
                 dest?.writeInt(category.ordinal)
                 if (location != null) dest?.writeParcelable(location, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
+                dest?.writeLong(date.time)
         }
 
         override fun describeContents(): Int {

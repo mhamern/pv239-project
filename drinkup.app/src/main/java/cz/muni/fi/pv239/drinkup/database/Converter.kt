@@ -7,9 +7,19 @@ import com.google.gson.reflect.TypeToken
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 
-import java.lang.reflect.Type
+import java.util.*
 
 class Converter {
+    @TypeConverter
+    fun toDate(value: Long?): Date? {
+        return if (value == null) null else Date(value)
+    }
+
+    @TypeConverter
+    fun toLong(value: Date?): Long? {
+        return value?.time
+    }
+
     @TypeConverter
     fun fromDrinksList(drinks: List<Drink>?): String? {
         if (drinks == null) {
@@ -32,22 +42,28 @@ class Converter {
 
     @TypeConverter
     fun fromLocation(location: Location?): String? {
-        if (location == null) {
-            return null
-        }
-        val gson = Gson()
-        val type = object : TypeToken<Location>() {}.type
-        return gson.toJson(location, type)
+        return if (location == null) {
+            null
+        } else String.format(
+            Locale.US, "%f,%f", location.latitude,
+            location.longitude
+        )
+
     }
 
     @TypeConverter
-    fun toLocation(location: String?): Location? {
-        if (location == null) {
+    fun toLocation(latlon: String?): Location? {
+        if (latlon == null) {
             return null
         }
-        val gson = Gson()
-        val type = object : TypeToken<Location>() {}.type
-        return gson.fromJson<Location>(location, type)
+
+        val pieces = latlon.split(",")
+        val result = Location("")
+
+        result.latitude = pieces[0].toDouble()
+        result.longitude = pieces[1].toDouble()
+
+        return result
     }
 
     @Suppress("NOTHING_TO_INLINE")
