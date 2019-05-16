@@ -10,11 +10,6 @@ import com.takisoft.preferencex.EditTextPreference
 import cz.muni.fi.pv239.drinkup.input.filter.InputFilterMinMax
 import kotlinx.android.synthetic.main.settings.*
 
-
-
-
-
-
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
