@@ -8,7 +8,7 @@ class DrinkByDateFilter {
     companion object {
         @JvmStatic
         fun filter(drinks: List<Drink>, from: Date, to: Date): List<Drink> = drinks.filter {
-            it.location?.time ?: -1 > from.time && it.location?.time ?: -1 < to.time
+            it.date.after(from) && it.date.before(to)
         }
     }
 

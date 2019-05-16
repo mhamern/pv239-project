@@ -16,16 +16,14 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDao
-import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod
-import cz.muni.fi.pv239.drinkup.event.listener.OnStatisticsTImePeriodChangeListener
 import cz.muni.fi.pv239.drinkup.formatter.statistics.ChartValueFormatter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_price_chart.*
-import java.text.SimpleDateFormat
+import kotlinx.android.synthetic.main.fragment_volume_chart.*
 import java.util.*
 
 class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
@@ -45,7 +43,7 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_category_chart, container, false)
+        return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_volume_chart, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,13 +68,12 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
     }
 
     private fun initChart() {
-        chart = price_chart
+        chart = volume_bar_chart
         chart?.setDrawValueAboveBar(true)
         chart?.description?.isEnabled = false
         chart?.setExtraOffsets(5F, 10F, 5F, 5F)
         chart?.animateY(1400, Easing.EaseInOutQuad)
         chart?.setDrawBarShadow(false)
-        chart?.setDrawValueAboveBar(true)
         chart?.setPinchZoom(false)
         chart?.setDrawGridBackground(false)
         // val xAxisFormatter = DayAxisValueFormatter(chart)
@@ -95,10 +92,11 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
     }
 
     private fun loadData(timePeriod: StatisticsTimePeriod) {
+        val fromDate = StatisticsTimePeriod.getFromDate(timePeriod)
+        val toDate = Date()
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-            .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+            .map { db?.drinkDao()?.getDrinksFromToDate(fromDate, toDate) ?: error("DB Error")}
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 drawChart(it, timePeriod)
@@ -141,10 +139,9 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
     }
 
     private fun calculateBarChartEntries(drinks: List<Drink>, groupByTimeParameter: Int): List<BarEntry> {
-        val format = SimpleDateFormat("yyyy-MM-dd")
         val calendar = GregorianCalendar.getInstance()
         val groups = drinks.groupBy {
-            calendar.time = Date(it.location?.time ?: - 1)
+            calendar.time = it.date
             calendar.get(groupByTimeParameter)
         }
         val chartEntries = ArrayList<BarEntry>()

@@ -1,6 +1,5 @@
 package cz.muni.fi.pv239.drinkup.fragment.statistics
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,9 @@ import android.view.ViewGroup
 import androidx.room.RxRoom
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDao
-import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,18 +17,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_price_chart.*
 import java.util.*
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.utils.ColorTemplate.createColors
+import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod.Companion.createDatesForTimePeriod
+import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod.Companion.transformDateToBeginningOfTimePeriod
 import cz.muni.fi.pv239.drinkup.formatter.statistics.ChartValueFormatter
-import khronos.Dates
-import khronos.day
-import khronos.minus
-import java.lang.Math.random
-import java.text.SimpleDateFormat
+import khronos.*
+import khronos.Dates.today
+import kotlin.collections.ArrayList
 
 
 class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : BaseChartFragment(initialTimePeriod) {
@@ -51,7 +44,7 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_category_chart, container, false)
+        return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_price_chart, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +69,7 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
     }
 
     private fun initChart() {
-        chart = price_chart
+        chart = price_bar_chart
         chart?.setDrawValueAboveBar(true)
         chart?.description?.isEnabled = false
         chart?.setExtraOffsets(5F, 10F, 5F, 5F)
@@ -101,10 +94,11 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
     }
 
     private fun loadData(timePeriod: StatisticsTimePeriod) {
+        val fromDate = StatisticsTimePeriod.getFromDate(timePeriod)
+        val toDate = Date()
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-           // .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+            .map { db?.drinkDao()?.getDrinksFromToDate(fromDate, toDate) ?: error("DB Error")}
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 drawChart(it, timePeriod)
@@ -114,18 +108,20 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
     private fun drawChart(drinks: List<Drink>, timePeriod: StatisticsTimePeriod) {
         val entries = calculateBarChartEntries(drinks, timePeriod)
         val dataSet = BarDataSet(entries, "Prices")
-        dataSet.colors = createColors()
+        val colors = createColors()
 
         val data = BarData(dataSet)
-        data.setValueFormatter(ChartValueFormatter("€"))
+        data.setValueFormatter(ChartValueFormatter("l"))
         data.setValueTextSize(15f)
         data.setValueTextColor(Color.WHITE)
-        data.barWidth = 0.9f
         chart?.data = data
-/*
+        dataSet.colors = colors
+
+        chart?.highlightValues(null)
         chart?.data?.notifyDataChanged()
         chart?.notifyDataSetChanged()
-        chart?.animateY(1400, Easing.EaseInOutQuad)*/
+        chart?.animateY(1400, Easing.EaseInOutQuad)
+        chart?.invalidate()
     }
 
     private fun createColors(): List<Int> {
@@ -137,27 +133,28 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
     }
 
     private fun calculateBarChartEntries(drinks: List<Drink>, timePeriod: StatisticsTimePeriod): List<BarEntry> {
-        return when (timePeriod) {
-            StatisticsTimePeriod.LAST_WEEK -> calculateBarChartEntries(drinks, Calendar.DAY_OF_WEEK)
-            StatisticsTimePeriod.LAST_MONTH -> calculateBarChartEntries(drinks, Calendar.WEEK_OF_MONTH)
-            StatisticsTimePeriod.LAST_YEAR -> calculateBarChartEntries(drinks, Calendar.MONTH)
-        }
-    }
-
-    private fun calculateBarChartEntries(drinks: List<Drink>, groupByTimeParameter: Int): List<BarEntry> {
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        val calendar = GregorianCalendar.getInstance()
         val groups = drinks.groupBy {
-            calendar.time = Date(it.location?.time ?: - 1)
-            calendar.get(groupByTimeParameter)
+            StatisticsTimePeriod.transformDateToBeginningOfTimePeriod(timePeriod, it.date)
         }
+
         val chartEntries = ArrayList<BarEntry>()
-        groups.entries.forEach {
-            chartEntries.add(
-                BarEntry(
-                    it.key.toFloat(),
-                    it.value.sumByDouble { it.price }.toFloat()
-                ))
+        createDatesForTimePeriod(timePeriod)
+            .forEachIndexed { index, date ->
+                if (groups.containsKey(date)) {
+                    chartEntries.add(
+                        BarEntry(
+                            index.toFloat(),
+                            groups.getValue(date).sumByDouble { it.price }.toFloat(),
+                            date
+                        ))
+                } else {
+                    chartEntries.add(
+                        BarEntry(
+                            index.toFloat(),
+                            0f,
+                            date
+                        ))
+                }
         }
         return chartEntries
     }

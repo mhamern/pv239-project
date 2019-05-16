@@ -25,6 +25,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.data.PieData
 import kotlinx.android.synthetic.main.fragment_category_chart.*
 import com.github.mikephil.charting.animation.Easing
+import khronos.*
 
 
 class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
@@ -81,10 +82,11 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
     }
 
     private fun loadData(timePeriod: StatisticsTimePeriod) {
+        val fromDate = StatisticsTimePeriod.getFromDate(timePeriod)
+        val toDate = Date()
         chartDataSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.drinkDao()?.getAllDrinks() ?: error("DB Error")}
-           .map { DrinkByDateFilter.filter(it, StatisticsTimePeriod.getFromDate(timePeriod) , Date()) }
+            .map { db?.drinkDao()?.getDrinksFromToDate(fromDate, toDate) ?: error("DB Error")}
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 drawChart(it)
