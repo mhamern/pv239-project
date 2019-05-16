@@ -21,5 +21,5 @@ interface DrinkDao {
     @Query("SELECT * FROM Drinks WHERE date > :from AND date < :to ")
     fun getDrinksFromToDate(from: Date, to: Date): List<Drink>
 
-    
+
 }
