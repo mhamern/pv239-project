@@ -20,4 +20,7 @@ interface SessionDao {
 
     @Query("SELECT * FROM Drinks WHERE sessionId = :sessionId")
     fun getAllDrinks(sessionId: Long): List<Drink>
+
+    @Query("SELECT * FROM Sessions ORDER BY created DESC LIMIT 1")
+    fun getLastSession(): DrinkingSession
 }
