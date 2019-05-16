@@ -131,27 +131,21 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
     }
 
     private fun calculateBarChartEntries(drinks: List<Drink>, timePeriod: StatisticsTimePeriod): List<BarEntry> {
-        return when (timePeriod) {
-            StatisticsTimePeriod.LAST_WEEK -> calculateBarChartEntries(drinks, Calendar.DAY_OF_WEEK)
-            StatisticsTimePeriod.LAST_MONTH -> calculateBarChartEntries(drinks, Calendar.WEEK_OF_MONTH)
-            StatisticsTimePeriod.LAST_YEAR -> calculateBarChartEntries(drinks, Calendar.MONTH)
-        }
-    }
-
-    private fun calculateBarChartEntries(drinks: List<Drink>, groupByTimeParameter: Int): List<BarEntry> {
-        val calendar = GregorianCalendar.getInstance()
         val groups = drinks.groupBy {
-            calendar.time = it.date
-            calendar.get(groupByTimeParameter)
+            StatisticsTimePeriod.transformDateToBeginningOfTimePeriod(timePeriod, it.date).toString()
         }
+
         val chartEntries = ArrayList<BarEntry>()
-        groups.entries.forEach { group ->
-            chartEntries.add(
-                BarEntry(
-                    group.key.toFloat(),
-                    group.value.sumByDouble { it.volume }.toFloat() / 1000
-                ))
-        }
+        StatisticsTimePeriod.createDatesForTimePeriod(timePeriod)
+            .forEachIndexed { index, date ->
+                val entry = BarEntry(
+                    index.toFloat(),
+                    groups[date.toString()]?.sumByDouble { it.volume }?.div(1000)?.toFloat()  ?: 0f,
+                    date
+                )
+                chartEntries.add(entry)
+            }
+
         return chartEntries
     }
 

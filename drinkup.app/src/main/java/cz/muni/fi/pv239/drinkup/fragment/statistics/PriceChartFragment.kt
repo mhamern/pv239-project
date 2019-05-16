@@ -134,28 +134,20 @@ class PriceChartFragment(private val initialTimePeriod: StatisticsTimePeriod) : 
 
     private fun calculateBarChartEntries(drinks: List<Drink>, timePeriod: StatisticsTimePeriod): List<BarEntry> {
         val groups = drinks.groupBy {
-            StatisticsTimePeriod.transformDateToBeginningOfTimePeriod(timePeriod, it.date)
+            StatisticsTimePeriod.transformDateToBeginningOfTimePeriod(timePeriod, it.date).toString()
         }
 
         val chartEntries = ArrayList<BarEntry>()
         createDatesForTimePeriod(timePeriod)
             .forEachIndexed { index, date ->
-                if (groups.containsKey(date)) {
-                    chartEntries.add(
-                        BarEntry(
-                            index.toFloat(),
-                            groups.getValue(date).sumByDouble { it.price }.toFloat(),
-                            date
-                        ))
-                } else {
-                    chartEntries.add(
-                        BarEntry(
-                            index.toFloat(),
-                            0f,
-                            date
-                        ))
-                }
-        }
+                val entry = BarEntry(
+                    index.toFloat(),
+                    groups[date.toString()]?.sumByDouble { it.price }?.toFloat() ?: 0f,
+                    date
+                )
+                chartEntries.add(entry)
+            }
+
         return chartEntries
     }
 }
