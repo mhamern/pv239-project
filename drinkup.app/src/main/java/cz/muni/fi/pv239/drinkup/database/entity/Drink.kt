@@ -10,6 +10,7 @@ import java.util.Date
 @Entity(tableName = "Drinks")
 data class Drink(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
+        val sessionId: Long? = null,
         var name: String = "",
         var price: Double = 0.0,
         var volume: Double = 0.0,
@@ -21,6 +22,7 @@ data class Drink(
 
 
         constructor(parcel: Parcel): this(
+                parcel.readLong(),
                 parcel.readLong(),
                 parcel.readString() ?: "",
                 parcel.readDouble(),
@@ -44,6 +46,7 @@ data class Drink(
         override fun writeToParcel(dest: Parcel?, flags: Int) {
                 dest?.writeString(name)
                 if (id != null) dest?.writeLong(id)
+                if (sessionId != null) dest?.writeLong(sessionId)
                 dest?.writeDouble(price)
                 dest?.writeDouble(volume)
                 dest?.writeDouble(abv)

@@ -8,17 +8,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Sessions")
 data class DrinkingSession(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
-        var title: String = "",
-        var drinks: List<Drink> = listOf()
+        var title: String = ""
 ): Parcelable {
 
     constructor(parcel: Parcel): this(
             parcel.readLong(),
-            parcel.readString() ?: "",
-            //parcel.readArrayList(Drink.CREATOR)
-            arrayListOf<Drink>().apply{
-                parcel.readList(this, Drink::class.java.classLoader)
-            }
+            parcel.readString() ?: ""
     )
 
     companion object CREATOR: Parcelable.Creator<DrinkingSession>{
@@ -39,7 +34,6 @@ data class DrinkingSession(
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         if (id != null) dest?.writeLong(id)
         dest?.writeString(title)
-        dest?.writeTypedList(drinks)
     }
 
 }

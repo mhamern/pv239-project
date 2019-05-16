@@ -44,8 +44,8 @@ class DrinkingSessionsAdapter(
 
         fun bind(drinkingSession: DrinkingSession){
             name.text = drinkingSession.title
-            val price = drinkingSession.drinks.sumByDouble { it.price }
-            totalPrice.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.total_price_of_session, price)
+            //val price = drinkingSession.drinks.sumByDouble { it.price }
+            totalPrice.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.total_price_of_session, 0)
 
         }
         init{
