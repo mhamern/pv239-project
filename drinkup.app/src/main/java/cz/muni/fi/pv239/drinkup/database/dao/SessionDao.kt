@@ -1,6 +1,7 @@
 package cz.muni.fi.pv239.drinkup.database.dao
 
 import androidx.room.*
+import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 
 @Dao
@@ -16,4 +17,7 @@ interface SessionDao {
 
     @Query("SELECT * FROM Sessions")
     fun getAllSessions(): List<DrinkingSession>
+
+    @Query("SELECT * FROM Drinks WHERE sessionId = :sessionId")
+    fun getAllDrinks(sessionId: Long): List<Drink>
 }
