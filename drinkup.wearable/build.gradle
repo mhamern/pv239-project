@@ -4,18 +4,17 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
-        applicationId "cz.muni.fi.pv239.drinkupwearable"
+        applicationId "cz.muni.fi.pv239.drinkup"
         minSdkVersion 25
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
+        debug {
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

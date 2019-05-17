@@ -2,6 +2,7 @@ package cz.muni.fi.pv239.drinkup
 
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
+import android.util.Log
 import android.view.View
 import androidx.wear.ambient.AmbientModeSupport
 import com.google.android.gms.tasks.Task
@@ -11,13 +12,16 @@ import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import com.google.android.gms.tasks.OnCompleteListener
+
+
 
 class MainActivity : WearableActivity(),
     AmbientModeSupport.AmbientCallbackProvider,
     CapabilityClient.OnCapabilityChangedListener {
 
     companion object {
-        @JvmStatic val CAPABILITY_PHONE_APP = "verify_remote_drinkup_phone_app"
+        @JvmStatic val CAPABILITY_PHONE_APP = "watch_server"
         @JvmStatic val ADD_DRINK_MESSAGE_PATH = "/add_drink"
     }
 
@@ -26,6 +30,8 @@ class MainActivity : WearableActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Wearable.getCapabilityClient(this).addListener(this, CAPABILITY_PHONE_APP)
+        checkIfPhoneHasApp()
         setAmbientEnabled()
         initAddDrinkButton()
     }
@@ -52,7 +58,6 @@ class MainActivity : WearableActivity(),
 
     private fun pickBestNodeId(nodes: Set<Node>): Node? {
         var bestNodeId: Node? = null
-        // Find a nearby node/phone or pick one arbitrarily. Realistically, there is only one phone.
         for (node in nodes) {
             bestNodeId = node
         }
@@ -72,7 +77,19 @@ class MainActivity : WearableActivity(),
 
 
     private fun checkIfPhoneHasApp() {
-       val capabilityInfoTask: Task<CapabilityInfo> = Wearable.getCapabilityClient(this).getCapability(
+        val capabilityInfoTask = Wearable.getCapabilityClient(this)
+            .getCapability(CAPABILITY_PHONE_APP, CapabilityClient.FILTER_REACHABLE)
+
+        capabilityInfoTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val capabilityInfo = task.result
+                val nodes = capabilityInfo!!.nodes
+                androidPhoneNodeWithApp = pickBestNodeId(nodes)
+            }
+            verifyNodeAndUpdateUI()
+        }
+
+/*       val capabilityInfoTask: Task<CapabilityInfo> = Wearable.getCapabilityClient(this).getCapability(
            CAPABILITY_PHONE_APP, CapabilityClient.FILTER_ALL)
         capabilityInfoTask.addOnCompleteListener {
             if (it.isSuccessful) {
@@ -81,7 +98,7 @@ class MainActivity : WearableActivity(),
                 androidPhoneNodeWithApp = pickBestNodeId(nodes)
             }
             verifyNodeAndUpdateUI()
-        }
+        }*/
     }
 
     private fun initAddDrinkButton() {

@@ -40,21 +40,21 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawerLayout: DrawerLayout
 
     companion object {
-        @JvmStatic val CAPABILITY_WEAR_APP = "verify_remote_drinkup_wear_app"
+        @JvmStatic val CAPABILITY_WEAR_APP = "watch_client"
         @JvmStatic val ADD_DRINK_MESSAGE_PATH = "/add_drink"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        createDrawer()
+        createAppBar()
+        Wearable.getCapabilityClient(this).addListener(this, CAPABILITY_WEAR_APP)
+        findWearDevicesWithApp()
+        findAllWearDevices()
         if (savedInstanceState == null) {
-            createDrawer()
-            createAppBar()
             showOverview()
             setAchievements()
-        } else {
-            createDrawer()
-            createAppBar()
         }
     }
 
