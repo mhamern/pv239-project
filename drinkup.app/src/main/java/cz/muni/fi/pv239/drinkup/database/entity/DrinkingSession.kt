@@ -4,16 +4,19 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "Sessions")
 data class DrinkingSession(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
-        var title: String = ""
+        var title: String = "",
+        var created: Date = Date()
 ): Parcelable {
 
     constructor(parcel: Parcel): this(
             parcel.readLong(),
-            parcel.readString() ?: ""
+            parcel.readString() ?: "",
+            Date(parcel.readLong())
     )
 
     companion object CREATOR: Parcelable.Creator<DrinkingSession>{
@@ -34,6 +37,7 @@ data class DrinkingSession(
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         if (id != null) dest?.writeLong(id)
         dest?.writeString(title)
+        dest?.writeLong(created.time)
     }
 
 }

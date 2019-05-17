@@ -17,13 +17,14 @@ import cz.muni.fi.pv239.drinkup.adapter.DrinkingSessionsAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.SessionDao
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import cz.muni.fi.pv239.drinkup.event.listener.OnDrinkingSessionDetailListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_history.*
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(), OnDrinkingSessionDetailListener {
     private lateinit var adapter: DrinkingSessionsAdapter
 
     private var listener: OnHistoryFragmentInteractionListener? = null
@@ -31,6 +32,10 @@ class HistoryFragment : Fragment() {
     private var drinkingSessionDao: SessionDao? = null
 
     private var loadDrinkingSessionSubscription: Disposable? = null
+
+    override fun onClickOnSession(editIntent: Intent) {
+        startActivityForResult(editIntent, 1)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,15 +46,18 @@ class HistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val myContext = context
         if (myContext != null) {
             db = AppDatabase.getAppDatabase(myContext)
             drinkingSessionDao = db?.sessionDao()
-            adapter = DrinkingSessionsAdapter(myContext)
+
+            adapter = DrinkingSessionsAdapter(myContext, this)
             drinking_session_list.adapter = adapter
             drinking_session_list.layoutManager = LinearLayoutManager(context)
             loadDrinkingSessions()
@@ -80,11 +88,6 @@ class HistoryFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         loadDrinkingSessionSubscription?.dispose()
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onHistoryFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
