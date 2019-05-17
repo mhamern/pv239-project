@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.DrinkingSessionDetailActivity
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
-import kotlinx.android.synthetic.main.activity_main.view.*
+import cz.muni.fi.pv239.drinkup.event.listener.OnDrinkingSessionDetailListener
 
 class DrinkingSessionsAdapter(
     private val context: Context,
+    private val onSessionDetailListener: OnDrinkingSessionDetailListener,
     private var drinkingSessions: List<DrinkingSession> =
         listOf()
 ): RecyclerView.Adapter<DrinkingSessionsAdapter.ViewHolder>(){
+
+    companion object {
+        @JvmStatic val INTENT_EXTRA_DRINKING_SESSION = "DRINKING_SESSION"
+    }
 
     fun refreshDrinkingSessions(drinkingSessions: List<DrinkingSession>){
         this.drinkingSessions = drinkingSessions
@@ -31,14 +36,15 @@ class DrinkingSessionsAdapter(
         return drinkingSessions.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrinkingSessionsAdapter.ViewHolder {
-        return DrinkingSessionsAdapter.ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.session_list_item, parent, false),
-            context
+                context,
+                onSessionDetailListener
         )
     }
 
-    class ViewHolder(itemView: View, private var context: Context): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private var context: Context, private var onSessionDetailListener: OnDrinkingSessionDetailListener): RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.session_name)
         var totalPrice: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.session_total_price)
 
@@ -47,11 +53,10 @@ class DrinkingSessionsAdapter(
             //val price = drinkingSession.drinks.sumByDouble { it.price }
             totalPrice.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.total_price_of_session, 0.0)
 
-        }
-        init{
             itemView.setOnClickListener{
                 val intent = Intent(context, DrinkingSessionDetailActivity::class.java)
-                itemView.context.startActivity(intent)
+                intent.putExtra(INTENT_EXTRA_DRINKING_SESSION, drinkingSession)
+                onSessionDetailListener.onClickOnSession(intent)
             }
         }
     }
