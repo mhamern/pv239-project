@@ -66,4 +66,5 @@
     <string name="gender">Gender</string>
     <string name="pref_weight_title">Weight (kg)</string>
     <string name="total_price_of_session" formatted="true">Total price of drinkingSession: %1$.2f  €</string>
+    <string name="drink_added_from_watch_toast">Your watches added drink!</string>
 </resources>
