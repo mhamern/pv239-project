@@ -28,7 +28,7 @@ import com.github.mikephil.charting.animation.Easing
 import khronos.*
 
 
-class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
+class CategoryChartFragment: BaseChartFragment() {
     private var db: AppDatabase? = null
     private var drinkDao: DrinkDao? = null
     private var chartDataSubscription: Disposable? = null
@@ -37,7 +37,7 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.retainInstance = true
+        this.retainInstance = false
     }
 
     override fun onCreateView(
@@ -51,7 +51,7 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
         super.onViewCreated(view, savedInstanceState)
         initDb()
         initChart()
-        loadData(initialTimePeriod)
+        loadData(StatisticsTimePeriod.values()[arguments?.getInt("initialTimePeriod") ?: 0])
     }
 
     override fun onDestroy() {
@@ -140,5 +140,16 @@ class CategoryChartFragment(private val initialTimePeriod: StatisticsTimePeriod)
             )
         ) }
         return chartEntries
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(initialTimePeriod: StatisticsTimePeriod): CategoryChartFragment {
+            val myFragment = CategoryChartFragment()
+            val args = Bundle()
+            args.putInt("initialTimePeriod", initialTimePeriod.ordinal)
+            myFragment.arguments = args
+            return myFragment
+        }
     }
 }

@@ -45,16 +45,14 @@ class HistoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            val myContext = context
-            if (myContext != null) {
-                db = AppDatabase.getAppDatabase(myContext)
-                drinkingSessionDao = db?.sessionDao()
-                adapter = DrinkingSessionsAdapter(myContext)
-                drinking_session_list.adapter = adapter
-                drinking_session_list.layoutManager = LinearLayoutManager(context)
-                loadDrinkingSessions()
-            }
+        val myContext = context
+        if (myContext != null) {
+            db = AppDatabase.getAppDatabase(myContext)
+            drinkingSessionDao = db?.sessionDao()
+            adapter = DrinkingSessionsAdapter(myContext)
+            drinking_session_list.adapter = adapter
+            drinking_session_list.layoutManager = LinearLayoutManager(context)
+            loadDrinkingSessions()
         }
     }
 
