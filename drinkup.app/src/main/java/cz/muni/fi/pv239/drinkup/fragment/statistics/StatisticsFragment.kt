@@ -31,12 +31,28 @@ class StatisticsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_statistics, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initStatisticsOptions(view.context)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnStatisticsFragmentInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnMyDrinksFragmentInteractionListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+        timePeriodChangeListener = null
     }
 
     private fun initStatisticsOptions(context: Context) {
@@ -69,25 +85,6 @@ class StatisticsFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val date = Date()
-
-        if (context is OnStatisticsFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnMyDrinksFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-        timePeriodChangeListener = null
-
-    }
-
-
     private fun onStatisticsOptionChanged(statisticsOption: StatisticsOption) {
         when (statisticsOption) {
             StatisticsOption.PRICE -> displayPriceChart()
@@ -102,15 +99,15 @@ class StatisticsFragment : Fragment() {
     }
 
     private fun displayVolumeChart() {
-        setChartFragment(VolumeChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
+        setChartFragment(VolumeChartFragment.newInstance(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
     private fun displayCategoriesChart() {
-        setChartFragment(CategoryChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
+        setChartFragment(CategoryChartFragment.newInstance(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
     private fun displayPriceChart() {
-        setChartFragment(PriceChartFragment(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
+        setChartFragment(PriceChartFragment.newInstance(StatisticsTimePeriod.values()[statistics_time_period_spinner.selectedItemPosition]))
     }
 
 
@@ -139,15 +136,6 @@ class StatisticsFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StatisticsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
             StatisticsFragment()

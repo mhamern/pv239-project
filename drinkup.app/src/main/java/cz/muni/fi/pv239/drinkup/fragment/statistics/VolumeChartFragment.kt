@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_price_chart.*
 import kotlinx.android.synthetic.main.fragment_volume_chart.*
 import java.util.*
 
-class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): BaseChartFragment(initialTimePeriod) {
+class VolumeChartFragment: BaseChartFragment() {
 
     private var db: AppDatabase? = null
     private var drinkDao: DrinkDao? = null
@@ -36,13 +36,14 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.retainInstance = true
+        this.retainInstance = false
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_volume_chart, container, false)
     }
 
@@ -50,7 +51,7 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
         super.onViewCreated(view, savedInstanceState)
         initDb()
         initChart()
-        loadData(initialTimePeriod)
+        loadData(StatisticsTimePeriod.values()[arguments?.getInt("initialTimePeriod") ?: 0])
     }
 
     override fun onDestroy() {
@@ -147,6 +148,17 @@ class VolumeChartFragment(private val initialTimePeriod: StatisticsTimePeriod): 
             }
 
         return chartEntries
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(initialTimePeriod: StatisticsTimePeriod): VolumeChartFragment {
+            val myFragment = VolumeChartFragment()
+            val args = Bundle()
+            args.putInt("initialTimePeriod", initialTimePeriod.ordinal)
+            myFragment.arguments = args
+            return myFragment
+        }
     }
 
 }
