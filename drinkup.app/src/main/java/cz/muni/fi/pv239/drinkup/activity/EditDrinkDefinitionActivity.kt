@@ -35,19 +35,17 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(cz.muni.fi.pv239.drinkup.R.layout.activity_edit_drink)
-        if (savedInstanceState == null) {
-            db = AppDatabase.getAppDatabase(this)
-            drinkDefDao = db?.drinkDefinitionDao()
-            resolveMode()
-            if (isEditMode) {
-                initForEditMode()
-            } else {
-                initForCreateMode()
-            }
-            addFilters()
-            createAppBar()
+        initDb()
+        resolveMode()
+        if (isEditMode) {
+            initForEditMode()
+        } else {
+            initForCreateMode()
         }
+        addFilters()
+        createAppBar()
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -111,6 +109,11 @@ class EditDrinkDefinitionActivity : AppCompatActivity() {
     private fun initForCreateMode() {
         val spinner: Spinner = my_drinks_create_category_spinner
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, Category.values())
+    }
+
+    private fun initDb() {
+        db = AppDatabase.getAppDatabase(this)
+        drinkDefDao = db?.drinkDefinitionDao()
     }
 
     private fun createAppBar() {

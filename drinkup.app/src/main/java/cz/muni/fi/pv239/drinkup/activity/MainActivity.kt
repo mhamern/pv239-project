@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.*
+import cz.muni.fi.pv239.drinkup.fragment.statistics.StatisticsFragment
 
 
 class MainActivity : AppCompatActivity(),
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity(),
             createAppBar()
             showOverview()
             setAchievements()
+        } else {
+            createDrawer()
+            createAppBar()
         }
     }
 

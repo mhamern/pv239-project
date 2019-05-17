@@ -17,14 +17,14 @@ import android.app.Activity
 import androidx.room.RxRoom
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDefinitionDao
-import cz.muni.fi.pv239.drinkup.event.listener.EditDrinkDefinitionListener
+import cz.muni.fi.pv239.drinkup.event.listener.OnEditDrinkDefinitionListener
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 import java.util.*
 
-class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
+class MyDrinksFragment : Fragment(), OnEditDrinkDefinitionListener {
 
     private lateinit var adapter: DrinkDefinitionsAdapter
 
@@ -43,26 +43,19 @@ class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(cz.muni.fi.pv239.drinkup.R.layout.fragment_my_drinks, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
+        super.onViewCreated(view, savedInstanceState)
             val myContext = context
             if (myContext != null) {
-                db = AppDatabase.getAppDatabase(myContext)
-                drinkDefDao = db?.drinkDefinitionDao()
-                adapter = DrinkDefinitionsAdapter(myContext, this)
-                my_drinks_list.adapter = adapter
-                my_drinks_list.layoutManager = LinearLayoutManager(context)
+                initDb(myContext)
+                createDrinksList(myContext)
                 loadDrinkDefinitions()
-                val fab: View = view.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_create_fab)
-                fab.setOnClickListener {
-                    val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
-                    startActivityForResult(intent, 1)
-                }
+                createAddButton(view)
             }
-        }
     }
 
     override fun onAttach(context: Context) {
@@ -95,6 +88,25 @@ class MyDrinksFragment : Fragment(), EditDrinkDefinitionListener {
         startActivityForResult(editIntent, 1)
     }
 
+
+    private fun initDb(context: Context) {
+        db = AppDatabase.getAppDatabase(context)
+        drinkDefDao = db?.drinkDefinitionDao()
+    }
+
+    private fun createDrinksList(context: Context) {
+        adapter = DrinkDefinitionsAdapter(context, this)
+        my_drinks_list.adapter = adapter
+        my_drinks_list.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun createAddButton(view: View) {
+        val fab: View = view.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_create_fab)
+        fab.setOnClickListener {
+            val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
+            startActivityForResult(intent, 1)
+        }
+    }
 
     private fun loadDrinkDefinitions() {
         loadDrinkDefsSubscription = RxRoom.createFlowable(db)
