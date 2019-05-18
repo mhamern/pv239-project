@@ -37,6 +37,13 @@
             android:label="Session Detail"
             android:launchMode="singleTop">
         </activity>
+        <activity android:name=".activity.MapActivity"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:label="Map">
+        </activity>
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyCaskQB9DWs2mEgX3hMMVS28oHvzH7X_ds"/>
     </application>
 
 </manifest>

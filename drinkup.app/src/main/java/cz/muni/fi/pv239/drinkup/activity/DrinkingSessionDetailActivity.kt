@@ -1,9 +1,12 @@
 package cz.muni.fi.pv239.drinkup.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RxRoom
+import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkingSessionsAdapter
 import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
@@ -33,14 +36,20 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
         session_drinks.adapter = adapter
         session_drinks.layoutManager = LinearLayoutManager(this)
         showSession(session)
+        show_map.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra("sessionid", session.id)
+            startActivity(intent)
+        }
 
-}
+    }
     private fun showSession(session: DrinkingSession){
         if (session.id != null) {
             session_title.text = session.title
             session_created.text = session.created.toString("dd-MMM-yyyy hh:mm:ss")
             session_price.text = "0"
             loadDrinks(session.id)
+            computeDrinksBAC(session.id)
         }
     }
 
@@ -54,9 +63,47 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
                 }
     }
 
+    private fun computeDrinksBAC(sessionId: Long) {
+        getDrinksSubscription = RxRoom.createFlowable(db)
+            .observeOn(Schedulers.io())
+            .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                computeBAC(it)
+            }
+    }
+
+    private fun computeBAC(drinks: List<Drink>) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        var weightSP = sharedPreferences.getString("pref_weight", "")
+        var genderSP = sharedPreferences.getString("pref_gender", "")
+        var weight: Double
+        var gender: Int
+        if (weightSP == "" || genderSP == "") {
+            session_bac.text = getString(R.string.bac_not_set)
+            return
+        } else {
+            weight = weightSP.toDouble()
+            gender = genderSP.toInt()
+        }
+        var genderConst: Double
+        if(gender == 0) {
+            genderConst = 0.68
+        } else {
+            genderConst = 0.55
+        }
+        var sortedList = drinks.sortedWith(compareBy({ it.date }))
+        var time: Double = (sortedList.last().date.time - sortedList.first().date.time).toDouble()/1000/60/60
+        var goa = 0.0
+        for(drink in drinks) {
+            goa = goa + (drink.volume*(drink.abv/100)*0.789)
+        }
+        var bac = ((goa/(weight*1000*genderConst))*100 - time*0.015)*10
+        session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
+    }
+
     private fun populateList(drinks: List<Drink>) {
         adapter.refreshDrinks(drinks)
-
     }
 
 }

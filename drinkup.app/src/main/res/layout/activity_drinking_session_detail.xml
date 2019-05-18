@@ -39,6 +39,16 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:id="@+id/session_created"
                 />
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                      android:id="@+id/session_bac"
+            />
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/show_map"
+                    android:text="@string/show_map"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
