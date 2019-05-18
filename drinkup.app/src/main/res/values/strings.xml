@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_api_key">AIzaSyCaskQB9DWs2mEgX3hMMVS28oHvzH7X_ds</string>
     <string name="app_name">DrinkUP</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
@@ -67,4 +68,7 @@
     <string name="pref_weight_title">Weight (kg)</string>
     <string name="total_price_of_session" formatted="true">Total price of drinkingSession: %1$.2f  €</string>
     <string name="drink_added_from_watch_toast">Your watches added drink!</string>
+    <string name="bac">Blood alcohol content</string>
+    <string name="bac_not_set">Weight or gender is not set</string>
+    <string name="show_map">Show map</string>
 </resources>
