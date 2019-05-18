@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.room.RxRoom
 import com.google.android.material.navigation.NavigationView
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.fragment.*
@@ -20,8 +21,12 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.*
 import cz.muni.fi.pv239.drinkup.fragment.statistics.StatisticsFragment
 import com.google.android.gms.wearable.Wearable
-
-
+import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.entity.Category
+import cz.muni.fi.pv239.drinkup.database.entity.Drink
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class MainActivity : AppCompatActivity(),

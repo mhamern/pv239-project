@@ -44,6 +44,11 @@
                       android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                       android:id="@+id/session_bac"
             />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:id="@+id/session_price"
+                />
             <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,13 +66,6 @@
                     android:layout_marginTop="16dp"/>
 
             </LinearLayout>
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:id="@+id/session_price"
-                />
-
-
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
