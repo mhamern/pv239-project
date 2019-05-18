@@ -11,6 +11,7 @@ import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.activity.DrinkingSessionDetailActivity
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import cz.muni.fi.pv239.drinkup.event.listener.OnDrinkingSessionDetailListener
+import khronos.toString
 
 class DrinkingSessionsAdapter(
     private val context: Context,
@@ -45,13 +46,12 @@ class DrinkingSessionsAdapter(
     }
 
     class ViewHolder(itemView: View, private var context: Context, private var onSessionDetailListener: OnDrinkingSessionDetailListener): RecyclerView.ViewHolder(itemView) {
-        var name: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.session_name)
-        var totalPrice: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.session_total_price)
+        var name: TextView = itemView.findViewById(R.id.session_name)
+        var date: TextView = itemView.findViewById(R.id.session_starting_time)
 
         fun bind(drinkingSession: DrinkingSession){
             name.text = drinkingSession.title
-            //val price = drinkingSession.drinks.sumByDouble { it.price }
-            totalPrice.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.total_price_of_session, 0.0)
+            date.text = drinkingSession.created.toString("dd-MMM-yyyy HH:mm:ss")
 
             itemView.setOnClickListener{
                 val intent = Intent(context, DrinkingSessionDetailActivity::class.java)
