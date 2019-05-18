@@ -23,4 +23,7 @@ interface SessionDao {
 
     @Query("SELECT * FROM Sessions ORDER BY created DESC LIMIT 1")
     fun getLastSession(): DrinkingSession
+
+    @Query("SELECT count(*) FROM Sessions")
+    fun getNumOfSessions(): Int
 }

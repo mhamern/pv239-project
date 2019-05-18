@@ -57,8 +57,12 @@ class MainActivity : AppCompatActivity(),
         findWearDevicesWithApp()
         findAllWearDevices()
         if (savedInstanceState == null) {
-            showOverview()
-            setAchievements()
+            setPreferences()
+            if (isActiveSession()){
+                showActive()
+            }else{
+                showLast()
+            }
         }
     }
 
@@ -138,7 +142,11 @@ class MainActivity : AppCompatActivity(),
         drawerLayout.closeDrawers()
         return when (menuItem.itemId) {
             R.id.nav_overview -> {
-                showOverview()
+                if (isActiveSession()){
+                    showActive()
+                }else{
+                    showLast()
+                }
                 true
             }
             R.id.nav_my_drinks -> {
@@ -165,10 +173,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun showOverview() {
-        setActiveFragment(OverviewFragment())
-    }
-
     private fun showMyDrinks() {
         setActiveFragment(MyDrinksFragment())
     }
@@ -189,12 +193,19 @@ class MainActivity : AppCompatActivity(),
         this.startActivity(Intent(this, SettingsActivity::class.java))
     }
 
+    private fun showActive(){
+        setActiveFragment(ActiveSessionFragment())
+    }
+
+    private fun showLast(){
+        setActiveFragment(LastSessionFragment())
+    }
+
     private fun setActiveFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
-
 
     private fun findAllWearDevices() {
         val nodeListTask: Task<List<Node>> = Wearable.getNodeClient(this).connectedNodes
@@ -268,7 +279,7 @@ class MainActivity : AppCompatActivity(),
 
 
 
-    private fun setAchievements() {
+    private fun setPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (sharedPreferences.getBoolean("firstRun", true)) {
             val editor = sharedPreferences.edit()
@@ -284,8 +295,15 @@ class MainActivity : AppCompatActivity(),
 
             editor.putInt("ach_drink100beer", 0)
 
+            editor.putBoolean("is_active_session", false)
+
             editor.commit()
         }
+    }
+
+    private fun isActiveSession(): Boolean{
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        return sharedPreferences.getBoolean("is_active_session", false)
     }
 
 }
