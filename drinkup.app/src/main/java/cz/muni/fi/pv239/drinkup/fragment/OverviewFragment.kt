@@ -3,59 +3,194 @@ package cz.muni.fi.pv239.drinkup.fragment
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.RxRoom
 
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
+import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.entity.Drink
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import khronos.toString
+import kotlinx.android.synthetic.main.fragment_overview.*
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [OverviewFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [OverviewFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class OverviewFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnOverviewFragmentInteractionListener? = null
+
+    private lateinit var adapter: DrinksOfSessionAdapter
+    private var db: AppDatabase? = null
+    private var getDrinksSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.retainInstance = true
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_overview, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onOverviewFragmentInteraction(uri)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val myContext = context
+        if (myContext != null) {
+            db = AppDatabase.getAppDatabase(myContext)
+
+            adapter = DrinksOfSessionAdapter(myContext)
+            last_session_drink_list.adapter = adapter
+            last_session_drink_list.layoutManager = LinearLayoutManager(myContext)
+            loadSession()
+            createAddButton(view)
+            createEndButton(view)
+
+            if (!isActiveSession(myContext)){
+                val endButton: View = view.findViewById(R.id.last_session_end_button)
+                endButton.visibility = View.INVISIBLE
+//                val title: View = view.findViewById(R.id.session_title)
+//                title.setOnClickListener {  }
+//                session_title_text.visibility = View.VISIBLE
+//                session_title_editText.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun createAddButton(view: View){
+        val fab: View = view.findViewById(R.id.last_session_add_fab)
+        fab.setOnClickListener {
+            Toast.makeText(context, "Add button", Toast.LENGTH_SHORT).show()
+            setActive(true)
+
+//            val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
+//            startActivityForResult(intent, 1)
+        }
+    }
+
+    private fun setActive(value: Boolean) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        sharedPreferences.edit().putBoolean("is_active_session", value).apply()
+        fragmentManager
+                ?.beginTransaction()
+                ?.detach(this)
+                ?.attach(this)
+                ?.commit()
+    }
+
+    private fun createEndButton(view: View){
+        val fab: View = view.findViewById(R.id.last_session_end_button)
+        fab.setOnClickListener {
+            Toast.makeText(context, "End button", Toast.LENGTH_SHORT).show()
+            setActive(false)
+        }
+    }
+
+    private fun isActiveSession(myContext: Context): Boolean{
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(myContext)
+        return sharedPreferences.getBoolean("is_active_session", false)
+    }
+
+    private fun loadSession(){
+        getDrinksSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getLastSession() ?: error("error")}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    showSession(it)
+                }
+    }
+
+    private fun showSession(session: DrinkingSession?){
+        if (session?.id != null) {
+            session_title_text.text = session.title
+            session_title_text.text = session.title
+            session_created.text = session.created.toString("dd-MMM-yyyy HH:mm:ss")
+            loadDrinks(session.id)
+            computeDrinksBAC(session.id)
+            computePrice(session.id)
+        }
+    }
+
+    private fun computePrice(sId: Long){
+        getDrinksSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getAllDrinks(sId) ?: Collections.emptyList()}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { it ->
+                    val price = it.sumByDouble{it.price}
+                    session_price.text = getString(R.string.total_price_of_session, price)
+                }
+    }
+
+    private fun loadDrinks(sessionId: Long){
+        getDrinksSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    populateList(it)
+                }
+    }
+
+    private fun populateList(drinks: List<Drink>) {
+        adapter.refreshDrinks(drinks)
+    }
+
+    private fun computeDrinksBAC(sessionId: Long) {
+        getDrinksSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    computeBAC(it)
+                }
+    }
+
+    private fun computeBAC(drinks: List<Drink>) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        var weightSP = sharedPreferences.getString("pref_weight", "")
+        var genderSP = sharedPreferences.getString("pref_gender", "")
+        var weight: Double
+        var gender: Int
+        if (weightSP == "" || genderSP == "") {
+            session_bac.text = getString(R.string.bac_not_set)
+            return
+        } else {
+            weight = weightSP.toDouble()
+            gender = genderSP.toInt()
+        }
+        var genderConst: Double
+        if(gender == 0) {
+            genderConst = 0.68
+        } else {
+            genderConst = 0.55
+        }
+        var sortedList = drinks.sortedWith(compareBy({ it.date }))
+        var time: Double = (sortedList.last().date.time - sortedList.first().date.time).toDouble()/1000/60/60
+        var goa = 0.0
+        for(drink in drinks) {
+            goa = goa + (drink.volume*(drink.abv/100)*0.789)
+        }
+        var bac = ((goa/(weight*1000*genderConst))*100 - time*0.015)*10
+        session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnOverviewFragmentInteractionListener) {
-            listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnMyDrinksFragmentInteractionListener")
         }
@@ -63,7 +198,6 @@ class OverviewFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
     }
 
     /**
@@ -96,8 +230,7 @@ class OverviewFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             OverviewFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }

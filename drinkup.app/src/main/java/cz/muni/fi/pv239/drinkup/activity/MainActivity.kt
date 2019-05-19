@@ -63,11 +63,8 @@ class MainActivity : AppCompatActivity(),
         findAllWearDevices()
         if (savedInstanceState == null) {
             setPreferences()
-            if (isActiveSession()){
-                showActive()
-            }else{
-                showLast()
-            }
+            showOverview()
+
         }
     }
 
@@ -147,11 +144,7 @@ class MainActivity : AppCompatActivity(),
         drawerLayout.closeDrawers()
         return when (menuItem.itemId) {
             R.id.nav_overview -> {
-                if (isActiveSession()){
-                    showActive()
-                }else{
-                    showLast()
-                }
+                showOverview()
                 true
             }
             R.id.nav_my_drinks -> {
@@ -198,12 +191,8 @@ class MainActivity : AppCompatActivity(),
         this.startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    private fun showActive(){
-        setActiveFragment(ActiveSessionFragment())
-    }
-
-    private fun showLast(){
-        setActiveFragment(LastSessionFragment())
+    private fun showOverview(){
+        setActiveFragment(OverviewFragment())
     }
 
     private fun setActiveFragment(fragment: Fragment) {
@@ -282,8 +271,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-
-
     private fun setPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (sharedPreferences.getBoolean("firstRun", true)) {
@@ -305,10 +292,4 @@ class MainActivity : AppCompatActivity(),
             editor.commit()
         }
     }
-
-    private fun isActiveSession(): Boolean{
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        return sharedPreferences.getBoolean("is_active_session", false)
-    }
-
 }
