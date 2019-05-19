@@ -32,6 +32,10 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".activity.AddDrinkActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".activity.DrinkingSessionDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Session Detail"
