@@ -1,6 +1,7 @@
 package cz.muni.fi.pv239.drinkup.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RxRoom
 
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.activity.AddDrinkActivity
+import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
@@ -72,11 +75,9 @@ class OverviewFragment : Fragment() {
     private fun createAddButton(view: View){
         val fab: View = view.findViewById(R.id.last_session_add_fab)
         fab.setOnClickListener {
-            Toast.makeText(context, "Add button", Toast.LENGTH_SHORT).show()
+            val intent = Intent(it.context, AddDrinkActivity::class.java)
+            startActivityForResult(intent, 1)
             setActive(true)
-
-//            val intent = Intent(it.context, EditDrinkDefinitionActivity::class.java)
-//            startActivityForResult(intent, 1)
         }
     }
 
