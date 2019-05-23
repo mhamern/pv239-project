@@ -9,5 +9,9 @@
     <string name="drink_added_toast">Your drink was added</string>
     <string name="alcohol_in_blood" formatted="true">Current alcohol in blood is %1$s %%</string>
     <string name="add_last_drink_parameterized">Add %1$s</string>
+    <string name="drink_added_no_permission_toast">Your drink was added without location. To use location add
+        permissions to your phone app
+    </string>
+    <string name="drink_add_failed">Adding drink failed. Try it again in you phone app.</string>
 
 </resources>
