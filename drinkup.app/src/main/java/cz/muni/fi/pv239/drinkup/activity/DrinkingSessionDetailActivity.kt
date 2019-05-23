@@ -12,6 +12,7 @@ import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import cz.muni.fi.pv239.drinkup.service.ComputeBACService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -106,32 +107,13 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
     }
 
     private fun computeBAC(drinks: List<Drink>) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        var weightSP = sharedPreferences.getString("pref_weight", "")
-        var genderSP = sharedPreferences.getString("pref_gender", "")
-        var weight: Double
-        var gender: Int
-        if (weightSP == "" || genderSP == "") {
+        val bac = ComputeBACService.computeBAC(this, drinks)
+        if (bac == null) {
             session_bac.text = getString(R.string.bac_not_set)
-            return
-        } else {
-            weight = weightSP.toDouble()
-            gender = genderSP.toInt()
         }
-        var genderConst: Double
-        if(gender == 0) {
-            genderConst = 0.68
-        } else {
-            genderConst = 0.55
+        else {
+            session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
         }
-        var sortedList = drinks.sortedWith(compareBy({ it.date }))
-        var time: Double = (sortedList.last().date.time - sortedList.first().date.time).toDouble()/1000/60/60
-        var goa = 0.0
-        for(drink in drinks) {
-            goa = goa + (drink.volume*(drink.abv/100)*0.789)
-        }
-        var bac = ((goa/(weight*1000*genderConst))*100 - time*0.015)*10
-        session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
     }
 
 
