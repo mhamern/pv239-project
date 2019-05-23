@@ -24,22 +24,16 @@
                 android:textAlignment="center"
                 android:text="@string/no_paired_phone"/>
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:visibility="invisible"
-                      android:id="@+id/main_layout"
-                      android:orientation="horizontal">
-            <Button android:id="@+id/add_drink_button"
-                    android:layout_gravity="top"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="@string/add_drink_text">
-            </Button>
+        <Button android:id="@+id/add_drink_button"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/add_drink_text">
+        </Button>
 
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      android:id="@+id/alcohol_in_blood_text"/>
-        </LinearLayout>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:id="@+id/alcohol_in_blood_text"/>
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

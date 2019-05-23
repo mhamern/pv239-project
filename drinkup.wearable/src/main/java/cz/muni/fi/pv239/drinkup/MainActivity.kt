@@ -11,15 +11,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : WearableActivity(),
-    AmbientModeSupport.AmbientCallbackProvider,
     CapabilityClient.OnCapabilityChangedListener {
 
     companion object {
-        @JvmStatic val CAPABILITY_PHONE_APP = "watch_server"
-        @JvmStatic val ADD_DRINK_MESSAGE_PATH = "/add_drink"
-        @JvmStatic val GET_ALCOHOL_IN_BLOOD_REQUEST_PATH = "/alcohol"
-        @JvmStatic val GET_LAST_DRINK_NAME_REQUEST_PATH = "/last_drink"
-        @JvmStatic val CONFIRM_ADD_DRINK_REQUEST_PATH = "/drink_added"
+        @JvmStatic
+        val CAPABILITY_PHONE_APP = "watch_server"
+        @JvmStatic
+        val ADD_DRINK_MESSAGE_PATH = "/add_drink"
+        @JvmStatic
+        val GET_ALCOHOL_IN_BLOOD_REQUEST_PATH = "/alcohol"
+        @JvmStatic
+        val GET_LAST_DRINK_NAME_REQUEST_PATH = "/last_drink"
+        @JvmStatic
+        val CONFIRM_ADD_DRINK_REQUEST_PATH = "/drink_added"
     }
 
     private var androidPhoneNodeWithApp: Node? = null
@@ -42,9 +46,6 @@ class MainActivity : WearableActivity(),
         checkIfPhoneHasApp()
     }
 
-    override fun getAmbientCallback(): AmbientModeSupport.AmbientCallback {
-        return MyAmbientCallback()
-    }
 
     override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
         androidPhoneNodeWithApp = pickBestNodeId(capabilityInfo.nodes)
@@ -65,7 +66,7 @@ class MainActivity : WearableActivity(),
 
     private fun handleMessage(messageEvent: MessageEvent) {
         when (messageEvent.path) {
-            CONFIRM_ADD_DRINK_REQUEST_PATH -> onAddDrinkSuccess()
+            CONFIRM_ADD_DRINK_REQUEST_PATH -> onAddDrinkConfirmation(messageEvent)
             GET_LAST_DRINK_NAME_REQUEST_PATH -> onLastDrinkNameUpdated(messageEvent)
             GET_ALCOHOL_IN_BLOOD_REQUEST_PATH -> onAlcoholInBloodUpdated(messageEvent)
         }
@@ -82,11 +83,12 @@ class MainActivity : WearableActivity(),
     private fun verifyNodeAndUpdateUI() {
         if (androidPhoneNodeWithApp != null) {
             no_paired_phone_text.visibility = View.INVISIBLE
-            main_layout.visibility = View.VISIBLE
-        }
-        else {
+            add_drink_button.visibility = View.VISIBLE
+            alcohol_in_blood_text.visibility = View.VISIBLE
+        } else {
             no_paired_phone_text.visibility = View.VISIBLE
-            main_layout.visibility = View.INVISIBLE
+            add_drink_button.visibility = View.INVISIBLE
+            alcohol_in_blood_text.visibility = View.INVISIBLE
         }
     }
 
@@ -152,8 +154,7 @@ class MainActivity : WearableActivity(),
 
 
     private fun onAlcoholInBloodUpdated(messageEvent: MessageEvent) {
-        val alcoholInBlood = messageEvent.data.toString(Charsets.UTF_8)
-        alcohol_in_blood_text.text = getString(R.string.alcohol_in_blood, alcoholInBlood)
+        alcohol_in_blood_text.text = messageEvent.data.toString(Charsets.UTF_8)
     }
 
     private fun onLastDrinkNameUpdated(messageEvent: MessageEvent) {
@@ -161,25 +162,20 @@ class MainActivity : WearableActivity(),
         add_drink_button.text = getString(R.string.add_last_drink_parameterized, lastDrinkName)
     }
 
-    private fun onAddDrinkSuccess() {
-        Toast.makeText(this, getString(R.string.drink_added_toast), Toast.LENGTH_SHORT).show()
+    private fun onAddDrinkConfirmation(messageEvent: MessageEvent) {
+        when (messageEvent.data.toString(Charsets.UTF_8)) {
+            "success" -> Toast.makeText(this, getString(R.string.drink_added_toast), Toast.LENGTH_SHORT).show()
+            "success_no_permission" -> Toast.makeText(
+                this,
+                getString(R.string.drink_added_no_permission_toast),
+                Toast.LENGTH_SHORT
+            ).show()
+            "failure" -> Toast.makeText(this, getString(R.string.drink_add_failed), Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     private fun onAddDrinkFailure() {
         Toast.makeText(this, "Adding drink failed. Check you connection.", Toast.LENGTH_LONG).show()
-
     }
-
-    private inner class MyAmbientCallback : AmbientModeSupport.AmbientCallback() {
-        /** Prepares the UI for ambient mode.  */
-        override fun onEnterAmbient(ambientDetails: Bundle?) {
-            super.onEnterAmbient(ambientDetails)
-            // In our case, the assets are already in black and white, so we don't update UI.
-        }
-
-        /** Restores the UI to active (non-ambient) mode.  */
-        override fun onExitAmbient() {
-            super.onExitAmbient()
-            // In our case, the assets are already in black and white, so we don't update UI.
-        }
-    }}
+}

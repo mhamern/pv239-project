@@ -34,50 +34,20 @@ class MainActivity : AppCompatActivity(),
     OverviewFragment.OnOverviewFragmentInteractionListener,
     HistoryFragment.OnHistoryFragmentInteractionListener,
     AchievementsFragment.OnAchievementsFragmentInteractionListener,
-    MyDrinksFragment.OnMyDrinksFragmentInteractionListener,
-    MessageClient.OnMessageReceivedListener,
-    CapabilityClient.OnCapabilityChangedListener {
-
-    private val TAG = "MainActivity"
-
-    private var allConnectedNodes: List<Node> = Collections.emptyList()
-    private var wearNodesWithApp: Set<Node> = Collections.emptySet()
+    MyDrinksFragment.OnMyDrinksFragmentInteractionListener {
 
     private lateinit var drawerLayout: DrawerLayout
-
-    companion object {
-        @JvmStatic val CAPABILITY_WEAR_APP = "watch_client"
-        @JvmStatic val ADD_DRINK_REQUEST_PATH = "/add_drink"
-        @JvmStatic val GET_ALCOHOL_IN_BLOOD_REQUEST_PATH = "/alcohol"
-        @JvmStatic val GET_LAST_DRINK_NAME_REQUEST_PATH = "/last_drink"
-        @JvmStatic val CONFIRM_ADD_DRINK_REQUEST_PATH = "/drink_added"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         createDrawer()
         createAppBar()
-        Wearable.getCapabilityClient(this).addListener(this, CAPABILITY_WEAR_APP)
-        findWearDevicesWithApp()
-        findAllWearDevices()
         if (savedInstanceState == null) {
             setPreferences()
             showOverview()
 
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Wearable.getCapabilityClient(this).removeListener(this, CAPABILITY_WEAR_APP)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Wearable.getCapabilityClient(this).addListener(this, CAPABILITY_WEAR_APP)
-        findWearDevicesWithApp()
-        findAllWearDevices()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -90,11 +60,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onCapabilityChanged(capabilityInfo: CapabilityInfo) {
-        wearNodesWithApp = capabilityInfo.nodes
-        findAllWearDevices()
-        verifyNodeAndStartCommunication()
-    }
 
     override fun onOverviewFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -114,13 +79,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onMyDrinksFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == ADD_DRINK_REQUEST_PATH) {
-            Log.i(TAG, "Received add message event from wearable ${messageEvent.sourceNodeId}")
-            // TODO: start session and add favourite drink OR add last drink to existing session
-        }
     }
 
     private fun createDrawer() {
@@ -171,6 +129,10 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun showOverview() {
+        setActiveFragment(OverviewFragment())
+    }
+
     private fun showMyDrinks() {
         setActiveFragment(MyDrinksFragment())
     }
@@ -191,84 +153,10 @@ class MainActivity : AppCompatActivity(),
         this.startActivity(Intent(this, SettingsActivity::class.java))
     }
 
-    private fun showOverview(){
-        setActiveFragment(OverviewFragment())
-    }
-
     private fun setActiveFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
-    }
-
-    private fun findAllWearDevices() {
-        val nodeListTask: Task<List<Node>> = Wearable.getNodeClient(this).connectedNodes
-        nodeListTask.addOnCompleteListener {
-            if (it.isSuccessful) {
-                allConnectedNodes = it.result ?: Collections.emptyList()
-            }
-        }
-    }
-
-    private fun findWearDevicesWithApp() {
-        val capabilityInfoTask: Task<CapabilityInfo> = Wearable.getCapabilityClient(this)
-            .getCapability(CAPABILITY_WEAR_APP, CapabilityClient.FILTER_ALL)
-        capabilityInfoTask.addOnCompleteListener {
-            if (it.isSuccessful) {
-                val capabilityInfo: CapabilityInfo? = it.result
-                wearNodesWithApp = capabilityInfo?.nodes ?: Collections.emptySet()
-                verifyNodeAndStartCommunication()
-            }
-        }
-    }
-
-    private fun verifyNodeAndStartCommunication() {
-        if (!allConnectedNodes.isEmpty() && !wearNodesWithApp.isEmpty()) {
-            Wearable.getMessageClient(this).addListener { messageEvent -> handleMessage(messageEvent) }
-        }
-    }
-
-    private fun handleMessage(messageEvent: MessageEvent) {
-        when (messageEvent.path) {
-            ADD_DRINK_REQUEST_PATH -> onAddLastDrinkRequestReceived(messageEvent.sourceNodeId)
-            GET_ALCOHOL_IN_BLOOD_REQUEST_PATH -> sendAlcoholInBloodInfo(messageEvent.sourceNodeId)
-            GET_LAST_DRINK_NAME_REQUEST_PATH -> sendLastDrinkInfo(messageEvent.sourceNodeId)
-        }
-    }
-
-    private fun onAddLastDrinkRequestReceived(sourceNodeId: String?) {
-        // TODO RETRIEVE FROM DB AND ADD
-        confirmDrinkAdded(sourceNodeId)
-        Toast.makeText(this, getString(R.string.drink_added_from_watch_toast), Toast.LENGTH_SHORT).show()}
-
-    private fun confirmDrinkAdded(sourceNodeId: String?) {
-        sourceNodeId?.also { nodeId ->
-            val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
-                nodeId,
-                CONFIRM_ADD_DRINK_REQUEST_PATH,
-                null
-            )
-        }
-    }
-
-    private fun sendAlcoholInBloodInfo(sourceNodeId: String?) {
-        sourceNodeId?.also { nodeId ->
-            val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
-                nodeId,
-                GET_ALCOHOL_IN_BLOOD_REQUEST_PATH,
-                0.94.toString().toByteArray(Charsets.UTF_8)
-            )
-        }
-    }
-
-    private fun sendLastDrinkInfo(sourceNodeId: String?) {
-        sourceNodeId?.also { nodeId ->
-            val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
-                nodeId,
-                GET_LAST_DRINK_NAME_REQUEST_PATH,
-                "My beer".toByteArray(Charsets.UTF_8)
-            )
-        }
     }
 
     private fun setPreferences() {
