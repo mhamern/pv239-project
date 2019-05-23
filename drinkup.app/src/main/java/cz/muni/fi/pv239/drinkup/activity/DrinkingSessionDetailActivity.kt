@@ -64,10 +64,9 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
         if (session.id != null) {
             session_title.text = session.title
             session_created.text = session.created.toString("dd-MMM-yyyy HH:mm:ss")
-            computePrice(session.id)
-            session_price.text = "0"
             loadDrinks(session.id)
             computeDrinksBAC(session.id)
+            computePrice(session.id)
         }
     }
 

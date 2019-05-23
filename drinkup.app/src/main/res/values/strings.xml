@@ -75,4 +75,7 @@
     <string name="you_have">You have</string>
     <string name="alcohol_promile">‰ of alcohol in blood</string>
     <string name="session_detail">Session detail</string>
+    <string name="end_session">End session</string>
+    <string name="add_drink">Add drink</string>
+    <string name="my_drink_add">Add</string>
 </resources>

@@ -12,61 +12,92 @@
         app:cardCornerRadius="5dp"
         app:cardElevation="@android:dimen/thumbnail_height">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:layout_margin="8dp"
-                      android:orientation="vertical"
-                      android:id="@+id/linearLayout">
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
                 <ImageView
-                        android:layout_height="100dp"
-                        android:layout_width="match_parent"
-                        android:layout_gravity="start"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/my_drinks_icon"
-                        android:src="@mipmap/beer"
-                />
+                    android:id="@+id/my_drinks_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="start"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/beer" />
 
                 <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_gravity="start">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="horizontal">
 
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-                                  android:id="@+id/my_drinks_name"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_weight="20"
+                            android:orientation="vertical">
 
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                                  android:id="@+id/my_drinks_category"/>
+                                <TextView
+                                    android:id="@+id/my_drinks_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                                  android:id="@+id/my_drinks_price"/>
+                                <TextView
+                                    android:id="@+id/my_drinks_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                                  android:id="@+id/my_drinks_alcohol"/>
+                                <TextView
+                                    android:id="@+id/my_drinks_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                                  android:id="@+id/my_drinks_volume"/>
+                                <TextView
+                                    android:id="@+id/my_drinks_alcohol"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+                                <TextView
+                                    android:id="@+id/my_drinks_volume"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relative_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="end|bottom">
+
+                                <Button
+                                    android:id="@+id/my_drinks_edit_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom|end"
+                                    android:text="@string/my_drink_edit_button" />
+
+                                <Button
+                                    android:id="@+id/my_drinks_add_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom|end"
+                                    android:text="@string/my_drink_add"
+                                    android:visibility="gone" />
+
+
+                        </RelativeLayout>
 
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_drink_edit_button"
-                        android:id="@+id/my_drinks_edit_button"
-                        android:layout_gravity="end"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
         </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

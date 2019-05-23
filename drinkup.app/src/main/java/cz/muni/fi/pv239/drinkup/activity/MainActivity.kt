@@ -44,8 +44,9 @@ class MainActivity : AppCompatActivity(),
         createDrawer()
         createAppBar()
         if (savedInstanceState == null) {
+            setPreferences()
             showOverview()
-            setAchievements()
+
         }
     }
 
@@ -158,7 +159,7 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
-    private fun setAchievements() {
+    private fun setPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (sharedPreferences.getBoolean("firstRun", true)) {
             val editor = sharedPreferences.edit()
@@ -174,8 +175,9 @@ class MainActivity : AppCompatActivity(),
 
             editor.putInt("ach_drink100beer", 0)
 
+            editor.putBoolean("is_active_session", false)
+
             editor.commit()
         }
     }
-
 }
