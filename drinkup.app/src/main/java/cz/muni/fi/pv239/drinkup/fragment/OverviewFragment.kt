@@ -84,11 +84,7 @@ class OverviewFragment : Fragment() {
     private fun setActive(value: Boolean) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         sharedPreferences.edit().putBoolean("is_active_session", value).apply()
-        fragmentManager
-                ?.beginTransaction()
-                ?.detach(this)
-                ?.attach(this)
-                ?.commit()
+
     }
 
     private fun createEndButton(view: View){

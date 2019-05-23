@@ -19,7 +19,9 @@ class DrinkDefinitionsAdapter(
     private val context: Context,
     private val onEditListener: OnEditDrinkDefinitionListener,
     private var drinks: List<DrinkDefinition> =
-        listOf()
+        listOf(),
+    private var addingDrink: Boolean = false
+
 ): RecyclerView.Adapter<DrinkDefinitionsAdapter.ViewHolder>() {
 
     companion object {
@@ -34,7 +36,8 @@ class DrinkDefinitionsAdapter(
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(cz.muni.fi.pv239.drinkup.R.layout.my_drinks_item_list, parent, false),
             context,
-            onEditListener
+            onEditListener,
+                addingDrink
             )
     }
 
@@ -46,7 +49,9 @@ class DrinkDefinitionsAdapter(
         holder.bind(drinks[position])
     }
 
-    class ViewHolder(itemView: View, private var context: Context, private var onEditListener: OnEditDrinkDefinitionListener): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private var context: Context,
+                     private var onEditListener: OnEditDrinkDefinitionListener,
+                     private var addingDrink: Boolean): RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_name)
         var category: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_category)
         var price: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_price)
@@ -54,6 +59,7 @@ class DrinkDefinitionsAdapter(
         var volume: TextView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_volume)
         var icon: ImageView = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_icon)
         var editButton: View = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_edit_button)
+        var addButton: View = itemView.findViewById(cz.muni.fi.pv239.drinkup.R.id.my_drinks_add_button)
 
         fun bind(drink: DrinkDefinition) {
             name.text = drink.name
@@ -61,10 +67,16 @@ class DrinkDefinitionsAdapter(
             price.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.price_attr, drink.price)
             alcoholVolume.text =  context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.alcohol_with_percents, drink.abv)
             volume.text = context.applicationContext.getString(cz.muni.fi.pv239.drinkup.R.string.drink_volume_with_millis, drink.volume)
-            editButton.setOnClickListener {
-                val intent = Intent(context, EditDrinkDefinitionActivity::class.java)
-                intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
-                onEditListener.onEditRequested(intent)
+            if (addingDrink){
+                editButton.visibility = View.GONE
+                addButton.visibility = View.VISIBLE
+
+            }else{
+                editButton.setOnClickListener {
+                    val intent = Intent(context, EditDrinkDefinitionActivity::class.java)
+                    intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
+                    onEditListener.onEditRequested(intent)
+                }
             }
             loadIcon(drink.category)
         }
