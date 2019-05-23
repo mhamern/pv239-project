@@ -1,9 +1,6 @@
 package cz.muni.fi.pv239.drinkup.service
 
-import android.widget.Toast
-import androidx.annotation.MainThread
 import androidx.room.RxRoom
-import com.google.android.gms.common.util.IOUtils.toByteArray
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
@@ -12,10 +9,7 @@ import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.service.ComputeBACService.Companion.computeBAC
-import cz.muni.fi.pv239.drinkup.service.WearableMessagesListener.Companion.GET_ALCOHOL_IN_BLOOD_REQUEST_PATH
-import cz.muni.fi.pv239.drinkup.service.WearableMessagesListener.Companion.GET_LAST_DRINK_NAME_REQUEST_PATH
 import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
