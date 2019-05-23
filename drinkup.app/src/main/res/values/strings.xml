@@ -71,4 +71,7 @@
     <string name="bac">Blood alcohol content</string>
     <string name="bac_not_set">Weight or gender is not set</string>
     <string name="show_map">Show map</string>
+    <string name="bac_message_no_data">No data to provide alcohol in blood</string>
+    <string name="you_have">You have</string>
+    <string name="alcohol_promile">‰ of alcohol in blood</string>
 </resources>

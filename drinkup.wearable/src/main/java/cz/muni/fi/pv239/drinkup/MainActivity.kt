@@ -154,8 +154,7 @@ class MainActivity : WearableActivity(),
 
 
     private fun onAlcoholInBloodUpdated(messageEvent: MessageEvent) {
-        val alcoholInBlood = messageEvent.data.toString(Charsets.UTF_8)
-        alcohol_in_blood_text.text = getString(R.string.alcohol_in_blood, alcoholInBlood)
+        alcohol_in_blood_text.text = messageEvent.data.toString(Charsets.UTF_8)
     }
 
     private fun onLastDrinkNameUpdated(messageEvent: MessageEvent) {
