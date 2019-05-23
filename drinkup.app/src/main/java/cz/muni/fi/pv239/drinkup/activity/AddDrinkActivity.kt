@@ -2,14 +2,18 @@ package cz.muni.fi.pv239.drinkup.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RxRoom
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import cz.muni.fi.pv239.drinkup.event.listener.OnEditDrinkDefinitionListener
+import cz.muni.fi.pv239.drinkup.service.AddDrinkService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -18,8 +22,31 @@ import kotlinx.android.synthetic.main.activity_drinking_session_detail.*
 import java.util.*
 
 class AddDrinkActivity: AppCompatActivity(), OnEditDrinkDefinitionListener {
+    private var saveDrinkSubscription: Disposable? = null
+
+
     override fun onEditRequested(editIntent: Intent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val drinkDefToAdd = editIntent.getParcelableExtra<DrinkDefinition>(DrinkDefinitionsAdapter.INTENT_EXTRA_EDIT_DRINK)
+        saveDrinkSubscription = AddDrinkService.addDrink(this,
+                Drink(name = drinkDefToAdd.name,
+                        abv = drinkDefToAdd.abv,
+                        volume = drinkDefToAdd.volume.toDouble(),
+                        price = drinkDefToAdd.price,
+                        category = drinkDefToAdd.category))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .edit()
+                .putBoolean("is_active_session", true)
+                .apply()
+
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        saveDrinkSubscription?.dispose()
     }
 
     private lateinit var adapter: DrinkDefinitionsAdapter

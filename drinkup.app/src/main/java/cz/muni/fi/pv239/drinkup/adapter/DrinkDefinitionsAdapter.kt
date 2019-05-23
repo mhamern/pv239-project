@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cz.muni.fi.pv239.drinkup.R
+import cz.muni.fi.pv239.drinkup.activity.AddDrinkActivity
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
@@ -70,6 +71,11 @@ class DrinkDefinitionsAdapter(
             if (addingDrink){
                 editButton.visibility = View.GONE
                 addButton.visibility = View.VISIBLE
+                addButton.setOnClickListener {
+                    val intent = Intent(context, AddDrinkActivity::class.java)
+                    intent.putExtra(INTENT_EXTRA_EDIT_DRINK, drink)
+                    onEditListener.onEditRequested(intent)
+                }
 
             }else{
                 editButton.setOnClickListener {

@@ -20,11 +20,16 @@ import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
+import cz.muni.fi.pv239.drinkup.service.ComputeBACService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import khronos.toString
+import kotlinx.android.synthetic.main.activity_drinking_session_detail.*
 import kotlinx.android.synthetic.main.fragment_overview.*
+import kotlinx.android.synthetic.main.fragment_overview.session_bac
+import kotlinx.android.synthetic.main.fragment_overview.session_created
+import kotlinx.android.synthetic.main.fragment_overview.session_price
 import java.util.*
 
 
@@ -32,12 +37,14 @@ class OverviewFragment : Fragment() {
 
     private lateinit var adapter: DrinksOfSessionAdapter
     private var db: AppDatabase? = null
-    private var getDrinksSubscription: Disposable? = null
+    private var loadDrinksSubscription: Disposable? = null
+    private var loadSessionSubscription: Disposable? = null
+    private var getPriceSubscription: Disposable? = null
+    private var computeBacSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.retainInstance = true
-
     }
 
     override fun onCreateView(
@@ -57,18 +64,17 @@ class OverviewFragment : Fragment() {
             adapter = DrinksOfSessionAdapter(myContext)
             last_session_drink_list.adapter = adapter
             last_session_drink_list.layoutManager = LinearLayoutManager(myContext)
-            loadSession()
             createAddButton(view)
             createEndButton(view)
+            setVisibilities(myContext)
+        }
+    }
 
-            if (!isActiveSession(myContext)){
-                val endButton: View = view.findViewById(R.id.last_session_end_button)
-                endButton.visibility = View.INVISIBLE
-//                val title: View = view.findViewById(R.id.session_title)
-//                title.setOnClickListener {  }
-//                session_title_text.visibility = View.VISIBLE
-//                session_title_editText.visibility = View.GONE
-            }
+    private fun setVisibilities(myContext: Context?){
+        if (isActiveSession(myContext)){
+            last_session_end_button.visibility = View.VISIBLE
+        }else{
+            last_session_end_button.visibility = View.INVISIBLE
         }
     }
 
@@ -77,7 +83,6 @@ class OverviewFragment : Fragment() {
         fab.setOnClickListener {
             val intent = Intent(it.context, AddDrinkActivity::class.java)
             startActivityForResult(intent, 1)
-            setActive(true)
         }
     }
 
@@ -90,39 +95,55 @@ class OverviewFragment : Fragment() {
     private fun createEndButton(view: View){
         val fab: View = view.findViewById(R.id.last_session_end_button)
         fab.setOnClickListener {
-            Toast.makeText(context, "End button", Toast.LENGTH_SHORT).show()
             setActive(false)
+            setVisibilities(context)
         }
     }
 
-    private fun isActiveSession(myContext: Context): Boolean{
+    override fun onResume() {
+        super.onResume()
+        val myContext = context
+        if (myContext != null) {
+            loadSession(myContext)
+            setVisibilities(myContext)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        adapter.notifyDataSetChanged()
+        setVisibilities(context)
+
+    }
+
+    private fun isActiveSession(myContext: Context?): Boolean{
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(myContext)
         return sharedPreferences.getBoolean("is_active_session", false)
     }
 
-    private fun loadSession(){
-        getDrinksSubscription = RxRoom.createFlowable(db)
+    private fun loadSession(myContext: Context){
+        loadSessionSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
                 .map{db?.sessionDao()?.getLastSession() ?: error("error")}
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    showSession(it)
+                    showSession(it, myContext)
                 }
     }
 
-    private fun showSession(session: DrinkingSession?){
+    private fun showSession(session: DrinkingSession?, myContext: Context){
         if (session?.id != null) {
             session_title_text.text = session.title
             session_title_text.text = session.title
             session_created.text = session.created.toString("dd-MMM-yyyy HH:mm:ss")
             loadDrinks(session.id)
-            computeDrinksBAC(session.id)
+            computeDrinksBAC(session.id, myContext)
             computePrice(session.id)
         }
     }
 
     private fun computePrice(sId: Long){
-        getDrinksSubscription = RxRoom.createFlowable(db)
+        getPriceSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
                 .map{db?.sessionDao()?.getAllDrinks(sId) ?: Collections.emptyList()}
                 .observeOn(AndroidSchedulers.mainThread())
@@ -133,7 +154,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun loadDrinks(sessionId: Long){
-        getDrinksSubscription = RxRoom.createFlowable(db)
+        loadDrinksSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
                 .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
                 .observeOn(AndroidSchedulers.mainThread())
@@ -146,43 +167,24 @@ class OverviewFragment : Fragment() {
         adapter.refreshDrinks(drinks)
     }
 
-    private fun computeDrinksBAC(sessionId: Long) {
-        getDrinksSubscription = RxRoom.createFlowable(db)
+    private fun computeDrinksBAC(sessionId: Long, myContext: Context) {
+        computeBacSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
                 .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    computeBAC(it)
+                    computeBAC(it, myContext)
                 }
     }
 
-    private fun computeBAC(drinks: List<Drink>) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        var weightSP = sharedPreferences.getString("pref_weight", "")
-        var genderSP = sharedPreferences.getString("pref_gender", "")
-        var weight: Double
-        var gender: Int
-        if (weightSP == "" || genderSP == "") {
+    private fun computeBAC(drinks: List<Drink>, myContext: Context) {
+        val bac = ComputeBACService.computeBAC(myContext, drinks)
+        if (bac == null) {
             session_bac.text = getString(R.string.bac_not_set)
-            return
-        } else {
-            weight = weightSP.toDouble()
-            gender = genderSP.toInt()
         }
-        var genderConst: Double
-        if(gender == 0) {
-            genderConst = 0.68
-        } else {
-            genderConst = 0.55
+        else {
+            session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
         }
-        var sortedList = drinks.sortedWith(compareBy({ it.date }))
-        var time: Double = (sortedList.last().date.time - sortedList.first().date.time).toDouble()/1000/60/60
-        var goa = 0.0
-        for(drink in drinks) {
-            goa = goa + (drink.volume*(drink.abv/100)*0.789)
-        }
-        var bac = ((goa/(weight*1000*genderConst))*100 - time*0.015)*10
-        session_bac.text = String.format("%s : %.2f‰", getString(R.string.bac), bac)
     }
 
     override fun onAttach(context: Context) {
@@ -193,8 +195,13 @@ class OverviewFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loadDrinksSubscription?.dispose()
+        loadSessionSubscription?.dispose()
+        getPriceSubscription?.dispose()
+        computeBacSubscription?.dispose()
     }
 
     /**
