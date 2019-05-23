@@ -1,5 +1,6 @@
 package cz.muni.fi.pv239.drinkup.service
 
+import android.widget.Toast
 import androidx.room.RxRoom
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.MessageEvent
@@ -74,7 +75,7 @@ class WearableMessagesListener: WearableListenerService() {
                 val alcoholInBloodText = if (it.isNaN()) {
                     getString(R.string.bac_message_no_data)
                 } else {
-                    "${getString(R.string.you_have)} $it ${getString(R.string.alcohol_promile)}"
+                    "${getString(R.string.you_have)} ${String.format("%.2f", it)} ${getString(R.string.alcohol_promile)}"
                 }
                 sourceNodeId?.also { nodeId ->
                     val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
