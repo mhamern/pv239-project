@@ -1,14 +1,26 @@
 package cz.muni.fi.pv239.drinkup.enum
-import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import khronos.*
 import khronos.Dates.today
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 enum class StatisticsTimePeriod {
-    LAST_WEEK,
-    LAST_MONTH,
-    LAST_YEAR;
+    LAST_WEEK {
+        override fun toString(): String {
+            return "Last week"
+        }
+    },
+    LAST_MONTH {
+        override fun toString(): String {
+            return "Last month"
+        }
+    },
+    LAST_YEAR {
+        override fun toString(): String {
+            return "Last year"
+        }
+    };
+
+    abstract override fun toString(): String;
 
     companion object {
         fun getFromDate(timePeriod: StatisticsTimePeriod): Date {
