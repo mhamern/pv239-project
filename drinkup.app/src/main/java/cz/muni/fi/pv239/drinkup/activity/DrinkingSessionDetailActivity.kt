@@ -28,7 +28,7 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(cz.muni.fi.pv239.drinkup.R.layout.activity_drinking_session_detail)
+        setContentView(R.layout.activity_drinking_session_detail)
         db = AppDatabase.getAppDatabase(this)
 
         val session = this.intent.getParcelableExtra<DrinkingSession>(DrinkingSessionsAdapter.INTENT_EXTRA_DRINKING_SESSION)
@@ -42,16 +42,44 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
             intent.putExtra("sessionid", session.id)
             startActivity(intent)
         }
+        createAppBar()
 
     }
+
+    private fun createAppBar() {
+        drinking_session_toolbar.title = getString(R.string.session_detail)
+
+        setSupportActionBar(drinking_session_toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     private fun showSession(session: DrinkingSession){
         if (session.id != null) {
             session_title.text = session.title
-            session_created.text = session.created.toString("dd-MMM-yyyy hh:mm:ss")
+            session_created.text = session.created.toString("dd-MMM-yyyy HH:mm:ss")
+            computePrice(session.id)
             session_price.text = "0"
             loadDrinks(session.id)
             computeDrinksBAC(session.id)
         }
+    }
+
+    private fun computePrice(sId: Long){
+        getDrinksSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map{db?.sessionDao()?.getAllDrinks(sId) ?: Collections.emptyList()}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { it ->
+                    val price = it.sumByDouble{it.price}
+                    session_price.text = getString(R.string.total_price_of_session, price)
+                }
     }
 
     private fun loadDrinks(sessionId: Long){
@@ -62,6 +90,10 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
                 .subscribe {
                     populateList(it)
                 }
+    }
+
+    private fun populateList(drinks: List<Drink>) {
+        adapter.refreshDrinks(drinks)
     }
 
     private fun computeDrinksBAC(sessionId: Long) {
@@ -84,8 +116,6 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
         }
     }
 
-    private fun populateList(drinks: List<Drink>) {
-        adapter.refreshDrinks(drinks)
-    }
+
 
 }

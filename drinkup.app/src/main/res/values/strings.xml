@@ -66,7 +66,7 @@
     <string name="decimal_point_character">.</string>
     <string name="gender">Gender</string>
     <string name="pref_weight_title">Weight (kg)</string>
-    <string name="total_price_of_session" formatted="true">Total price of drinkingSession: %1$.2f  €</string>
+    <string name="total_price_of_session" formatted="true">Total price: %1$.2f  €</string>
     <string name="drink_added_from_watch_toast">Your watches added drink!</string>
     <string name="bac">Blood alcohol content</string>
     <string name="bac_not_set">Weight or gender is not set</string>
@@ -74,4 +74,5 @@
     <string name="bac_message_no_data">No data to provide alcohol in blood</string>
     <string name="you_have">You have</string>
     <string name="alcohol_promile">‰ of alcohol in blood</string>
+    <string name="session_detail">Session detail</string>
 </resources>
