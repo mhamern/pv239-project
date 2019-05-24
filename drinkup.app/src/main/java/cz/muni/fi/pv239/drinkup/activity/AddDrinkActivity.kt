@@ -1,15 +1,22 @@
 package cz.muni.fi.pv239.drinkup.activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RxRoom
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.adapter.DrinkDefinitionsAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
 import cz.muni.fi.pv239.drinkup.event.listener.OnEditDrinkDefinitionListener
@@ -40,7 +47,7 @@ class AddDrinkActivity: AppCompatActivity(), OnEditDrinkDefinitionListener {
                 .edit()
                 .putBoolean("is_active_session", true)
                 .apply()
-
+        achievements(drinkDefToAdd.category)
         finish()
     }
 
@@ -95,4 +102,76 @@ class AddDrinkActivity: AppCompatActivity(), OnEditDrinkDefinitionListener {
         return true
     }
 
+    private fun achievements(category: Category) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = sharedPreferences.edit()
+        if (category == Category.BEER) {
+            var actual: Int = sharedPreferences.getInt("ach_drinkBeer", 0)
+            editor.putInt("ach_drinkBeer", actual+1)
+        } else if (category == Category.SPIRIT) {
+            var actual: Int = sharedPreferences.getInt("ach_drinkShot", 0)
+            editor.putInt("ach_drinkShot", actual+1)
+        }
+        editor.commit()
+        makeNotification(category)
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (manager.getNotificationChannel("achievement") != null) {
+                return
+            }
+
+            val name = "achievement"
+            val description = "achievement channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("achievement", name, importance)
+            channel.description = description
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun makeNotification(category: Category) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        var beer = sharedPreferences.getInt("ach_drinkBeer", 0)
+        var shots = sharedPreferences.getInt("ach_drinkShot", 0)
+        var content = ""
+        var completed = false
+        if (category == Category.BEER) {
+            if (beer == 5) {
+                content = getString(R.string.ach_drink5beer)
+                completed = true
+            }
+            if (beer == 20) {
+                content = getString(R.string.ach_drink20beer)
+                completed = true
+            }
+            if (beer == 100) {
+                content = getString(R.string.ach_drink100beer)
+                completed = true
+            }
+        }
+        if (category == Category.SPIRIT) {
+            if (shots == 5) {
+                content = getString(R.string.ach_drink5shots)
+                completed = true
+            }
+            if (shots == 20) {
+                content = getString(R.string.ach_drink20shots)
+                completed = true
+            }
+        }
+        if (completed) {
+            createNotificationChannel()
+            val builder = NotificationCompat.Builder(this, "achievement")
+                .setSmallIcon(R.drawable.abc_ic_star_black_16dp)
+                .setContentTitle(getString(R.string.achievement_completed))
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+            val manager = NotificationManagerCompat.from(this)
+            manager.notify(1, builder.build())
+        }
+    }
 }

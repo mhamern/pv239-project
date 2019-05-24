@@ -165,15 +165,9 @@ class MainActivity : AppCompatActivity(),
             val editor = sharedPreferences.edit()
             editor.putBoolean("firstRun", false)
 
-            editor.putInt("ach_drink5beer", 0)
+            editor.putInt("ach_drinkBeer", 0)
 
-            editor.putInt("ach_drink20beer", 0)
-
-            editor.putInt("ach_drink5shots", 0)
-
-            editor.putInt("ach_drink20shots", 0)
-
-            editor.putInt("ach_drink100beer", 0)
+            editor.putInt("ach_drinkSpirit", 0)
 
             editor.putBoolean("is_active_session", false)
 
