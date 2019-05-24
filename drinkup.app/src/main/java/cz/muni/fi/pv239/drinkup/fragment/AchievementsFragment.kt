@@ -22,12 +22,14 @@ class AchievementsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         var sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        var beer = sharedPreferences.getInt("ach_drinkBeer", 0)
+        var shots = sharedPreferences.getInt("ach_drinkShot", 0)
         val achievements = listOf(
-            Achievement(getString(R.string.ach_drink5beer), (sharedPreferences.getInt("ach_drink5beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink5beer", 0), 5),
-            Achievement(getString(R.string.ach_drink20beer), (sharedPreferences.getInt("ach_drink20beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink20beer", 0), 20),
-            Achievement(getString(R.string.ach_drink100beer), (sharedPreferences.getInt("ach_drink100beer", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink100beer", 0), 100),
-            Achievement(getString(R.string.ach_drink5shots), (sharedPreferences.getInt("ach_drink5shots", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink5shots", 0), 5),
-            Achievement(getString(R.string.ach_drink20shots), (sharedPreferences.getInt("ach_drink20shots", 0).toDouble()/5*100).toInt(), sharedPreferences.getInt("ach_drink20shots", 0), 20)
+            Achievement(getString(R.string.ach_drink5beer), (beer.toDouble()/5*100).toInt(), beer, 5),
+            Achievement(getString(R.string.ach_drink20beer), (beer.toDouble()/20*100).toInt(), beer, 20),
+            Achievement(getString(R.string.ach_drink100beer), (beer.toDouble()/100*100).toInt(), beer, 100),
+            Achievement(getString(R.string.ach_drink5shots), (shots.toDouble()/5*100).toInt(), shots, 5),
+            Achievement(getString(R.string.ach_drink20shots), (shots.toDouble()/20*100).toInt(), shots, 20)
         )
         recycler_view_achievements.layoutManager = LinearLayoutManager(this.context)
         recycler_view_achievements.adapter = AchievementsAdapter(achievements)
