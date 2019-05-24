@@ -51,9 +51,11 @@
     <string name="save">Uložiť</string>
     <string name="price_attr">Cena: %1$.2f €</string>
     <string name="pref_weight_title">Váha (kg)</string>
-    <string name="SPIRIT_string">TVRDÉ</string>
-    <string name="BEER_string">PIVO</string>
-    <string name="WINE_string">VÍNO</string>
-    <string name="COCKTAIL_string">DRINK</string>
     <string name="achievement_completed">Ocenenie získné</string>
+    <string name="statistics_option_categories">Kategórie</string>
+    <string name="statistics_option_price">Cena</string>
+    <string name="statistics_option_volume">Objem</string>
+    <string name="statistics_time_period_last_month">Posledný mesiac</string>
+    <string name="statistics_time_period_last_week">Posledný týždeň</string>
+    <string name="statistics_time_period_last_year">Posledný rok</string>
 </resources>

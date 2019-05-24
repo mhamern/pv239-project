@@ -57,7 +57,7 @@ class StatisticsFragment : Fragment() {
 
     private fun initStatisticsOptions(context: Context) {
         val timePeriodSpinner: Spinner = statistics_time_period_spinner
-        timePeriodSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsTimePeriod.values())
+        timePeriodSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsTimePeriod.values().map { it.toStringLocalized(this.context) })
         timePeriodSpinner.setSelection(StatisticsTimePeriod.LAST_WEEK.ordinal)
 
         timePeriodSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -71,7 +71,7 @@ class StatisticsFragment : Fragment() {
         }
 
         val statisticsOptionSpinner: Spinner = statistics_option_spinner
-        statisticsOptionSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsOption.values())
+        statisticsOptionSpinner.adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, StatisticsOption.values().map {it.toStringLocalized(this.context)})
         statisticsOptionSpinner.setSelection(StatisticsOption.CATEGORIES.ordinal)
 
         statisticsOptionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
