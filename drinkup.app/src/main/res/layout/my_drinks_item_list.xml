@@ -77,20 +77,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_gravity="end|bottom">
+                            android:layout_gravity="center">
 
                                 <Button
                                     android:id="@+id/my_drinks_edit_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom|end"
                                     android:text="@string/my_drink_edit_button" />
 
                                 <Button
                                     android:id="@+id/my_drinks_add_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom|end"
                                     android:text="@string/my_drink_add"
                                     android:visibility="gone" />
 
