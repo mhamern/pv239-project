@@ -17,8 +17,16 @@ PV239 Android app
 * Podpora viac jazykov
 ### Wear App
 * Neni standlone
-#### Interactive mode
-* Na hodinkach defaultne nejoblibenejsi piti, po pridani prvniho po zbytek vecera ukazuje naposledny pridane piti (tap to drink)
+* Button na pridani posledniho drinku
+* Aktualni promile, pokud nejaka jsou
 * Pridanim prvniho piti zacnu drinkingSession
-#### Ambient mode
-* Aktualni promile
+
+
+## Návod ke spuštění hodinek
+Aplikace na hodinkách musí mít companion app na telefonu a spárovaný telefon.
+Na telefonu musí být nainstalována aplikace WearOS spárovaná s emulátorem.
+
+[Pairing two emulators](https://medium.com/@DaniAmjad/connect-android-device-with-android-wear-emulator-pair-android-device-with-android-wear-emulator-c54d1913b244 "Návod na propojení dvou emulátorů")
+
+[Alternative tutorial](http://www.technotalkative.com/android-wear-part-3-set-up-wear-emulator/ "Návod s obrázky")
+
