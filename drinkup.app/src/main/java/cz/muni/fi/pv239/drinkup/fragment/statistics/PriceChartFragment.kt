@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.room.RxRoom
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.utils.ColorTemplate
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDao
@@ -19,9 +20,12 @@ import kotlinx.android.synthetic.main.fragment_price_chart.*
 import java.util.*
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
+import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod.Companion.createDatesForTimePeriod
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod.Companion.transformDateToBeginningOfTimePeriod
 import cz.muni.fi.pv239.drinkup.formatter.statistics.ChartValueFormatter
+import cz.muni.fi.pv239.drinkup.formatter.statistics.NoValueChartFormatter
+import cz.muni.fi.pv239.drinkup.formatter.statistics.TimePeriodAxisFormatter
 import khronos.*
 import khronos.Dates.today
 import kotlin.collections.ArrayList
@@ -69,22 +73,26 @@ class PriceChartFragment : BaseChartFragment() {
 
     private fun initChart() {
         chart = price_bar_chart
-        chart?.setDrawValueAboveBar(true)
         chart?.description?.isEnabled = false
         chart?.setExtraOffsets(5F, 10F, 5F, 5F)
         chart?.animateY(1400, Easing.EaseInOutQuad)
         chart?.setDrawBarShadow(false)
-        chart?.setDrawValueAboveBar(true)
         chart?.setPinchZoom(false)
         chart?.setDrawGridBackground(false)
-       // val xAxisFormatter = DayAxisValueFormatter(chart)
+        val valueFormatter = ChartValueFormatter("€")
+        chart?.axisLeft?.valueFormatter = valueFormatter
+        chart?.axisRight?.valueFormatter = valueFormatter
+
+        val xAxisFormatter = TimePeriodAxisFormatter(
+            StatisticsTimePeriod.values()[arguments?.getInt("initialTimePeriod") ?: 0]
+        )
 
         val xAxis = chart?.xAxis
-        xAxis?.position = XAxisPosition.BOTTOM
+        xAxis?.position = XAxis.XAxisPosition.BOTTOM
         xAxis?.setDrawGridLines(false)
-        xAxis?.granularity = 1f // only intervals of 1 day
+        xAxis?.granularity = 1f
         xAxis?.labelCount = 7
-        //xAxis?.valueFormatter = xAxisFormatter
+        xAxis?.valueFormatter = xAxisFormatter
 
     }
 
@@ -106,13 +114,13 @@ class PriceChartFragment : BaseChartFragment() {
 
     private fun drawChart(drinks: List<Drink>, timePeriod: StatisticsTimePeriod) {
         val entries = calculateBarChartEntries(drinks, timePeriod)
-        val dataSet = BarDataSet(entries, "Prices")
+        val dataSet = BarDataSet(entries, getString(R.string.statistics_prices))
         val colors = createColors()
 
         val data = BarData(dataSet)
-        data.setValueFormatter(ChartValueFormatter("l"))
-        data.setValueTextSize(15f)
-        data.setValueTextColor(Color.WHITE)
+        val timePeriodFormatter = chart?.xAxis?.valueFormatter as TimePeriodAxisFormatter
+        timePeriodFormatter.timePeriod = timePeriod
+        data.setValueFormatter(NoValueChartFormatter())
         chart?.data = data
         dataSet.colors = colors
 
