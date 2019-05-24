@@ -56,7 +56,7 @@ enum class StatisticsTimePeriod {
             var from = getFromDate(LAST_YEAR).beginningOfMonth
             val to = Dates.today.beginningOfMonth
 
-            while (from < to) {
+            while (from <= to) {
                 months.add(from)
                 from = (from + 2.month).beginningOfMonth
             }
@@ -68,7 +68,7 @@ enum class StatisticsTimePeriod {
             var from = getFromDate(LAST_MONTH).beginningOfDay
             val to = Dates.today.beginningOfDay
 
-            while (from < to) {
+            while (from <= to) {
                 days.add(from)
                 from = (from + 1.day).beginningOfDay
             }
@@ -80,7 +80,7 @@ enum class StatisticsTimePeriod {
             var from = getFromDate(LAST_WEEK).beginningOfDay
             val to = Dates.today.beginningOfDay
 
-            while (from < to) {
+            while (from <= to) {
                 days.add(from)
                 from = (from + 1.day).beginningOfDay
             }
