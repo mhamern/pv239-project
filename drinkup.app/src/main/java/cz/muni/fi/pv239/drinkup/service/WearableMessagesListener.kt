@@ -8,6 +8,7 @@ import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.service.ComputeBACService.Companion.computeBAC
 import io.reactivex.Flowable
@@ -64,10 +65,8 @@ class WearableMessagesListener: WearableListenerService() {
 
     private fun addLastDrink(): Flowable<AddDrinkOperationResult> {
         return getLastDrink()
-            .map { AddDrinkOperationResult.SUCCEEDED }
-                // TODO ADD Service that will get Drink, add it to last session or create new session and add it to it and return AddDrinkOperationResult.
-                // Service cannot subscribe to flowable and cannot do any work on UI thread.
-        // Add some default beer if no last drink exists
+            .switchMap { AddDrinkService.addDrink(this, it) }
+
     }
 
     private fun sendAlcoholInBloodInfo(sourceNodeId: String?) {
@@ -100,6 +99,7 @@ class WearableMessagesListener: WearableListenerService() {
                     db?.sessionDao()?.getAllDrinks(it.id) ?: Collections.emptyList()}
             }
              .map {computeBAC(this, it, false) ?: Double.NaN }
+             .onErrorReturn { Double.NaN }
     }
 
 
@@ -126,6 +126,6 @@ class WearableMessagesListener: WearableListenerService() {
     private fun getLastDrink(): Flowable<Drink> {
         return RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.drinkDao()?.getLastDrink() ?: Drink() }
+            .map { db?.drinkDao()?.getLastDrink() ?: Drink( name = "Default beer", price = 1.0, abv = 4.0, volume = 500.0, category = Category.BEER) }
     }
 }

@@ -14,7 +14,7 @@ import java.util.*
 class AddDrinkService{
     companion object{
         @JvmStatic
-        fun addDrink(context: Context, drink: Drink): Flowable<Unit>{
+        fun addDrink(context: Context, drink: Drink): Flowable<AddDrinkOperationResult>{
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             val db = AppDatabase.getAppDatabase(context)
             //TODO test na permissions + ziskanie lat a lon
@@ -26,6 +26,8 @@ class AddDrinkService{
                         .map{db?.sessionDao()?.getLastSession() ?: error("canot get last session")}
                         .map { db?.drinkDao()?.insertDrink(copyDrink(drink, it.id, lon, lat))
                                 ?: error("cannot add drink to db")}
+                    .map { if (lat == null || lon == null) AddDrinkOperationResult.SUCCEEDED_WITHOUT_PERMISSION else AddDrinkOperationResult.SUCCEEDED }
+                    .onErrorReturn { AddDrinkOperationResult.FAILED }
             }
             else
             {
@@ -37,6 +39,8 @@ class AddDrinkService{
                         .map{db?.sessionDao()?.getLastSession() ?: error("cannot get last session")}
                         .map { db?.drinkDao()?.insertDrink(copyDrink(drink, it.id, lon, lat))
                                 ?: error("cannot add drink to db")}
+                        .map { if (lat == null || lon == null) AddDrinkOperationResult.SUCCEEDED_WITHOUT_PERMISSION else AddDrinkOperationResult.SUCCEEDED }
+                        .onErrorReturn { AddDrinkOperationResult.FAILED }
             }
         }
 
