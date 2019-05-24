@@ -85,4 +85,6 @@
     <string name="statistics_time_period_last_week">Last week</string>
     <string name="statistics_time_period_last_month">Last month</string>
     <string name="statistics_time_period_last_year">Last year</string>
+    <string name="statistics_prices">Prices</string>
+    <string name="statistics_volume">Volume</string>
 </resources>

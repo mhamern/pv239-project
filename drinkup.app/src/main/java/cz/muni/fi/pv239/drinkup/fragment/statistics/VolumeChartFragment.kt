@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.room.RxRoom
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -14,15 +13,17 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.dao.DrinkDao
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.enum.StatisticsTimePeriod
 import cz.muni.fi.pv239.drinkup.formatter.statistics.ChartValueFormatter
+import cz.muni.fi.pv239.drinkup.formatter.statistics.NoValueChartFormatter
+import cz.muni.fi.pv239.drinkup.formatter.statistics.TimePeriodAxisFormatter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_price_chart.*
 import kotlinx.android.synthetic.main.fragment_volume_chart.*
 import java.util.*
 
@@ -70,21 +71,25 @@ class VolumeChartFragment: BaseChartFragment() {
 
     private fun initChart() {
         chart = volume_bar_chart
-        chart?.setDrawValueAboveBar(true)
         chart?.description?.isEnabled = false
         chart?.setExtraOffsets(5F, 10F, 5F, 5F)
         chart?.animateY(1400, Easing.EaseInOutQuad)
         chart?.setDrawBarShadow(false)
         chart?.setPinchZoom(false)
         chart?.setDrawGridBackground(false)
-        // val xAxisFormatter = DayAxisValueFormatter(chart)
+        val valueFormatter = ChartValueFormatter("l")
+        chart?.axisLeft?.valueFormatter = valueFormatter
+        chart?.axisRight?.valueFormatter = valueFormatter
+         val xAxisFormatter = TimePeriodAxisFormatter(
+             StatisticsTimePeriod.values()[arguments?.getInt("initialTimePeriod") ?: 0]
+         )
 
         val xAxis = chart?.xAxis
         xAxis?.position = XAxis.XAxisPosition.BOTTOM
         xAxis?.setDrawGridLines(false)
-        xAxis?.granularity = 1f // only intervals of 1 day
+        xAxis?.granularity = 1f
         xAxis?.labelCount = 7
-        //xAxis?.valueFormatter = xAxisFormatter
+        xAxis?.valueFormatter = xAxisFormatter
 
     }
 
@@ -106,14 +111,14 @@ class VolumeChartFragment: BaseChartFragment() {
 
     private fun drawChart(drinks: List<Drink>, timePeriod: StatisticsTimePeriod) {
         val entries = calculateBarChartEntries(drinks, timePeriod)
-        val dataSet = BarDataSet(entries, "Volume")
+        val dataSet = BarDataSet(entries, getString(R.string.statistics_volume))
         val colors = createColors()
 
         val data = BarData(dataSet)
-        data.setValueFormatter(ChartValueFormatter("l"))
-        data.setValueTextSize(15f)
-        data.setValueTextColor(Color.WHITE)
+        val timePeriodFormatter = chart?.xAxis?.valueFormatter as TimePeriodAxisFormatter
+        timePeriodFormatter.timePeriod = timePeriod
         chart?.data = data
+        data.setValueFormatter(NoValueChartFormatter())
         dataSet.colors = colors
 
         chart?.highlightValues(null)
