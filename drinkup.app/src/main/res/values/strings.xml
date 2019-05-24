@@ -1,5 +1,5 @@
 <resources>
-    <string name="google_api_key">AIzaSyCaskQB9DWs2mEgX3hMMVS28oHvzH7X_ds</string>
+    <string name="google_api_key" translatable="false">AIzaSyCaskQB9DWs2mEgX3hMMVS28oHvzH7X_ds</string>
     <string name="app_name">DrinkUP</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
@@ -24,9 +24,9 @@
     </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync" translatable="false">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string name="pref_title_sync_frequency" translatable="false">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
         <item>30 minutes</item>
@@ -79,4 +79,8 @@
     <string name="end_session">End session</string>
     <string name="add_drink">Add drink</string>
     <string name="my_drink_add">Add</string>
+    <string name="BEER_string">BEER</string>
+    <string name="SPIRIT_string">SPIRIT</string>
+    <string name="WINE_string">WINE</string>
+    <string name="COCKTAIL_string">COCKTAIL</string>
 </resources>
