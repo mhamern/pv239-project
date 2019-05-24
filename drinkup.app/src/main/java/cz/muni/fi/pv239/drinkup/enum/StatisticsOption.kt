@@ -1,21 +1,24 @@
 package cz.muni.fi.pv239.drinkup.enum
 
+import android.content.Context
+import cz.muni.fi.pv239.drinkup.R
+
 enum class StatisticsOption {
     PRICE {
-        override fun toString(): String {
-            return "Price"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_option_price) ?: "Price"
         }
     },
     VOLUME {
-        override fun toString(): String {
-            return "Volume"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_option_volume) ?: "Volume"
         }
     },
     CATEGORIES {
-        override fun toString(): String {
-            return "Categories"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_option_categories) ?: "Categories"
         }
     };
 
-    abstract override fun toString(): String;
+    abstract fun toStringLocalized(context: Context?): String
 }

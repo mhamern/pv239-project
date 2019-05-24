@@ -1,26 +1,29 @@
 package cz.muni.fi.pv239.drinkup.enum
+import android.content.Context
+import android.provider.MediaStore.Audio.AlbumColumns.LAST_YEAR
+import cz.muni.fi.pv239.drinkup.R
 import khronos.*
 import khronos.Dates.today
 import java.util.*
 
 enum class StatisticsTimePeriod {
     LAST_WEEK {
-        override fun toString(): String {
-            return "Last week"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_time_period_last_week) ?: "Last week"
         }
     },
     LAST_MONTH {
-        override fun toString(): String {
-            return "Last month"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_time_period_last_month) ?: "Last month"
         }
     },
     LAST_YEAR {
-        override fun toString(): String {
-            return "Last year"
+        override fun toStringLocalized(context: Context?): String {
+            return context?.getString(R.string.statistics_time_period_last_year) ?: "Last year "
         }
     };
 
-    abstract override fun toString(): String;
+    abstract fun toStringLocalized(context: Context?): String
 
     companion object {
         fun getFromDate(timePeriod: StatisticsTimePeriod): Date {

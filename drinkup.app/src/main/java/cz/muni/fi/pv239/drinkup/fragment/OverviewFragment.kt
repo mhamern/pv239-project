@@ -18,6 +18,7 @@ import cz.muni.fi.pv239.drinkup.activity.AddDrinkActivity
 import cz.muni.fi.pv239.drinkup.activity.EditDrinkDefinitionActivity
 import cz.muni.fi.pv239.drinkup.adapter.DrinksOfSessionAdapter
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
+import cz.muni.fi.pv239.drinkup.database.dao.SessionDao
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import cz.muni.fi.pv239.drinkup.service.ComputeBACService
@@ -124,11 +125,19 @@ class OverviewFragment : Fragment() {
     private fun loadSession(myContext: Context){
         loadSessionSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
-                .map{db?.sessionDao()?.getLastSession() ?: error("error")}
+                .map{  db?.sessionDao()?.getLastSession() ?: createInitialSession(db?.sessionDao() ?: error("No session dao")) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     showSession(it, myContext)
                 }
+    }
+
+    private fun createInitialSession(sessionDao: SessionDao): DrinkingSession {
+        val session = DrinkingSession()
+        session.title = Date().toString()
+        session.created = Date()
+        sessionDao.insertSession(session)
+        return sessionDao.getLastSession()
     }
 
     private fun showSession(session: DrinkingSession?, myContext: Context){

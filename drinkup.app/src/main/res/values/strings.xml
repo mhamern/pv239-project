@@ -79,4 +79,10 @@
     <string name="end_session">End session</string>
     <string name="add_drink">Add drink</string>
     <string name="my_drink_add">Add</string>
+    <string name="statistics_option_price">Price</string>
+    <string name="statistics_option_volume">Volume</string>
+    <string name="statistics_option_categories">Categories</string>
+    <string name="statistics_time_period_last_week">Last week</string>
+    <string name="statistics_time_period_last_month">Last month</string>
+    <string name="statistics_time_period_last_year">Last year</string>
 </resources>
