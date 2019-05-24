@@ -10,49 +10,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
         android:id="@+id/last_session_wrapper"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/my_switcher"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/session_title_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+            <ImageButton
+                android:src = "@drawable/ic_edit_black_24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="description"
+                android:layout_marginStart="4dp"
+                android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/session_title_editText"
-                android:layout_width="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:id="@+id/session_created"
             />
 
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:id="@+id/session_bac"
             />
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:id="@+id/session_price"
             />
 
-        <androidx.recyclerview.widget.RecyclerView android:id="@+id/last_session_drink_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/last_session_drink_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="32dp"
             android:layout_marginTop="16dp"/>
 
     </LinearLayout>
@@ -70,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
         android:text="@string/end_session"/>
 
 </FrameLayout>
