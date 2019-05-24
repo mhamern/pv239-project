@@ -67,6 +67,7 @@ class WearableMessagesListener: WearableListenerService() {
             .map { AddDrinkOperationResult.SUCCEEDED }
                 // TODO ADD Service that will get Drink, add it to last session or create new session and add it to it and return AddDrinkOperationResult.
                 // Service cannot subscribe to flowable and cannot do any work on UI thread.
+        // Add some default beer if no last drink exists
     }
 
     private fun sendAlcoholInBloodInfo(sourceNodeId: String?) {
@@ -109,15 +110,22 @@ class WearableMessagesListener: WearableListenerService() {
                     val sendTask: Task<*> = Wearable.getMessageClient(this).sendMessage(
                         nodeId,
                         GET_LAST_DRINK_NAME_REQUEST_PATH,
-                        it.name.toByteArray(Charsets.UTF_8)
+                        this.getDrinkName(it).toByteArray(Charsets.UTF_8)
                     )
                 }
             }
         }
 
+    private fun getDrinkName(drink: Drink): String {
+        return if (drink.id == null)
+            "beer"
+        else
+            drink.name
+    }
+
     private fun getLastDrink(): Flowable<Drink> {
         return RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.drinkDao()?.getLastDrink() ?: error("No last drink") }
+            .map { db?.drinkDao()?.getLastDrink() ?: Drink() }
     }
 }
