@@ -98,7 +98,7 @@ class WearableMessagesListener: WearableListenerService() {
                 else {
                     db?.sessionDao()?.getAllDrinks(it.id) ?: Collections.emptyList()}
             }
-             .map {computeBAC(this, it) ?: Double.NaN }
+             .map {computeBAC(this, it, false) ?: Double.NaN }
     }
 
 

@@ -9,7 +9,8 @@
     <string name="ach_drink20beer">Drink 20 beers</string>
     <string name="ach_drink100beer">Drink 100 beers</string>
     <string name="ach_drink5shots">Drink 5 shots</string>
-    <string name="ach_drink20shots">Drink 20 shots</string>
+    <string name="ach_drink20shots">Drink 20 shots</string>\
+    <string name="achievement_completed">Achievement completed</string>
 
     <!-- Strings related to Settings -->
 

@@ -178,7 +178,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun computeBAC(drinks: List<Drink>, myContext: Context) {
-        val bac = ComputeBACService.computeBAC(myContext, drinks)
+        val bac = ComputeBACService.computeBAC(myContext, drinks, false)
         if (bac == null) {
             session_bac.text = getString(R.string.bac_not_set)
         }

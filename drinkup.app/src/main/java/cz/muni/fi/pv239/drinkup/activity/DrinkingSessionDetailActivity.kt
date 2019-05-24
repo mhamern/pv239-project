@@ -25,6 +25,7 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
     private lateinit var adapter: DrinksOfSessionAdapter
     private var db: AppDatabase? = null
     private var getDrinksSubscription: Disposable? = null
+    private var getDrinksBACSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +97,7 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
     }
 
     private fun computeDrinksBAC(sessionId: Long) {
-        getDrinksSubscription = RxRoom.createFlowable(db)
+        getDrinksBACSubscription = RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
             .map{db?.sessionDao()?.getAllDrinks(sessionId) ?: Collections.emptyList()}
             .observeOn(AndroidSchedulers.mainThread())
@@ -106,7 +107,7 @@ class DrinkingSessionDetailActivity: AppCompatActivity(){
     }
 
     private fun computeBAC(drinks: List<Drink>) {
-        val bac = ComputeBACService.computeBAC(this, drinks)
+        val bac = ComputeBACService.computeBAC(this, drinks, true)
         if (bac == null) {
             session_bac.text = getString(R.string.bac_not_set)
         }
