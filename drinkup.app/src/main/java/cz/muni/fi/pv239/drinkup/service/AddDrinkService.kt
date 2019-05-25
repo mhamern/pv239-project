@@ -19,10 +19,9 @@ class AddDrinkService{
         fun addDrink(context: Context, drink: Drink): Flowable<AddDrinkOperationResult>{
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             val db = AppDatabase.getAppDatabase(context)
-
             return RxRoom.createFlowable(db)
                     .observeOn(Schedulers.io())
-                    .map{if (!(sharedPreferences.getBoolean("is_active_session", false)))
+                    .map{if (!sharedPreferences.getBoolean("is_active_session", false))
                     {db?.sessionDao()
                             ?.insertSession(DrinkingSession(title = Date().toString("dd-MMM-yyyy")))
                             ?: error("cannot insert session")}}
