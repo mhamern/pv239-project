@@ -191,7 +191,7 @@ class OverviewFragment : Fragment() {
             computePrice(session.id)
         }else {
             setActive(myContext, false)
-            session_created.text = "Create session by adding drink to it (click '+' button) "
+            session_created.text = getString(R.string.no_session_text)
         }
     }
 
