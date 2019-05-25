@@ -55,7 +55,7 @@
         </activity>
         <activity android:name=".activity.MapActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:label="Map">
+                  android:label="@string/map">
         </activity>
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
