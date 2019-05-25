@@ -68,7 +68,7 @@ class AddDrinkService{
                             lon = location?.longitude ?: 0.0
                         }
                     }}
-                    .map{db?.sessionDao()?.getLastSession() ?: error("canot get last session")}
+                    .map{db?.sessionDao()?.getLastSession() ?: error("cannot get last session")}
                         .map { db?.drinkDao()?.insertDrink(copyDrink(drink, it.id, lon, lat))
                                 ?: error("cannot add drink to db")}
                     .map { if (lat == 0.0 || lon == 0.0) AddDrinkOperationResult.SUCCEEDED_WITHOUT_PERMISSION else AddDrinkOperationResult.SUCCEEDED }
@@ -92,7 +92,7 @@ class AddDrinkService{
                             lon = location?.longitude ?: 0.0
                         }
                     }}
-                    .map{db?.sessionDao()?.getLastSession() ?: error("canot get last session")}
+                    .map{db?.sessionDao()?.getLastSession() ?: error("cannot get last session")}
                         .map { db?.drinkDao()?.insertDrink(copyDrink(drink, it.id, lon, lat))
                                 ?: error("cannot add drink to db")}
                         .map { if (lat == 0.0 || lon == 0.0) AddDrinkOperationResult.SUCCEEDED_WITHOUT_PERMISSION else AddDrinkOperationResult.SUCCEEDED }

@@ -10,6 +10,7 @@ import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import cz.muni.fi.pv239.drinkup.service.ComputeBACService.Companion.computeBAC
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
@@ -87,13 +88,20 @@ class WearableMessagesListener: WearableListenerService() {
             }
     }
 
+    private fun createEmptySession(): DrinkingSession {
+        val session = DrinkingSession()
+        session.title = "Example session"
+        session.created = Date()
+        return session
+    }
+
     private fun calculateAlcoholInBloodInfo(): Flowable<Double> {
          return RxRoom.createFlowable(db)
             .observeOn(Schedulers.io())
-            .map { db?.sessionDao()?.getLastSession() ?: error("No session dao")}
+            .map { db?.sessionDao()?.getLastSession() ?: createEmptySession()}
             .map{
                 if (it.id == null) {
-                    error ("No session")
+                    Collections.emptyList()
                 }
                 else {
                     db?.sessionDao()?.getAllDrinks(it.id) ?: Collections.emptyList()}

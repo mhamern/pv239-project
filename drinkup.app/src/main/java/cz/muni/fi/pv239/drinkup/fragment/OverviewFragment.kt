@@ -70,7 +70,7 @@ class OverviewFragment : Fragment() {
             last_session_drink_list.adapter = adapter
             last_session_drink_list.layoutManager = LinearLayoutManager(myContext)
             createAddButton(view)
-            createEndButton(view)
+            createEndButton(view, myContext)
             setVisibilities(myContext)
             editButton(view)
         }
@@ -79,8 +79,11 @@ class OverviewFragment : Fragment() {
     private fun setVisibilities(myContext: Context?){
         if (isActiveSession(myContext)){
             last_session_end_button.visibility = View.VISIBLE
+            edit_session_title.visibility = View.VISIBLE
+
         }else{
             last_session_end_button.visibility = View.INVISIBLE
+            edit_session_title.visibility = View.INVISIBLE
         }
     }
 
@@ -126,16 +129,16 @@ class OverviewFragment : Fragment() {
             .subscribe()
     }
 
-    private fun setActive(value: Boolean) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private fun setActive(myContext: Context, value: Boolean) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(myContext)
         sharedPreferences.edit().putBoolean("is_active_session", value).apply()
 
     }
 
-    private fun createEndButton(view: View){
+    private fun createEndButton(view: View, myContext: Context){
         val fab: View = view.findViewById(R.id.last_session_end_button)
         fab.setOnClickListener {
-            setActive(false)
+            setActive(myContext,false)
             setVisibilities(context)
         }
     }
@@ -164,29 +167,31 @@ class OverviewFragment : Fragment() {
     private fun loadSession(myContext: Context){
         loadSessionSubscription = RxRoom.createFlowable(db)
                 .observeOn(Schedulers.io())
-                .map{  db?.sessionDao()?.getLastSession() ?: createInitialSession(db?.sessionDao() ?: error("No session dao")) }
+                .map{  db?.sessionDao()?.getLastSession() ?: createInitialSession() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     showSession(it, myContext)
                 }
     }
 
-    private fun createInitialSession(sessionDao: SessionDao): DrinkingSession {
+    private fun createInitialSession(): DrinkingSession {
         val session = DrinkingSession()
-        session.title = Date().toString()
+        session.title = "Example session"
         session.created = Date()
-        sessionDao.insertSession(session)
-        return sessionDao.getLastSession()
+        return session
     }
 
     private fun showSession(session: DrinkingSession?, myContext: Context){
         if (session?.id != null) {
-            session_title_text.text = session.title
+            //session_title_text.text = session.title
             session_title_text.text = session.title
             session_created.text = session.created.toString("dd-MMM-yyyy HH:mm:ss")
             loadDrinks(session.id)
             computeDrinksBAC(session.id, myContext)
             computePrice(session.id)
+        }else {
+            setActive(myContext, false)
+            session_created.text = "Create session by adding drink to it (click '+' button) "
         }
     }
 
