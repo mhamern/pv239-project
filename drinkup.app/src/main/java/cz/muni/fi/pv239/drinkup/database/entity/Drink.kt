@@ -16,8 +16,8 @@ data class Drink(
         var volume: Double = 0.0,
         var abv: Double = 0.0,
         var category: Category = Category.BEER,
-        val longitude: Double? = null,
-        val latitude: Double? = null,
+        var longitude: Double = 0.0,
+        var latitude: Double = 0.0,
         var date: Date = Date()
 ): Parcelable {
 
@@ -53,8 +53,8 @@ data class Drink(
                 dest?.writeDouble(volume)
                 dest?.writeDouble(abv)
                 dest?.writeInt(category.ordinal)
-                if (longitude != null) dest?.writeDouble(longitude)
-                if (latitude != null) dest?.writeDouble(latitude)
+                dest?.writeDouble(longitude)
+                dest?.writeDouble(latitude)
                 dest?.writeLong(date.time)
         }
 

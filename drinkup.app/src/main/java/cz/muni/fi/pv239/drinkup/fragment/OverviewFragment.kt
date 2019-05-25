@@ -1,5 +1,6 @@
 package cz.muni.fi.pv239.drinkup.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RxRoom
@@ -31,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_overview.*
 import kotlinx.android.synthetic.main.fragment_overview.session_bac
 import kotlinx.android.synthetic.main.fragment_overview.session_created
 import kotlinx.android.synthetic.main.fragment_overview.session_price
+import org.w3c.dom.Text
 import java.util.*
 
 
@@ -68,6 +72,7 @@ class OverviewFragment : Fragment() {
             createAddButton(view)
             createEndButton(view)
             setVisibilities(myContext)
+            editButton(view)
         }
     }
 
@@ -85,6 +90,40 @@ class OverviewFragment : Fragment() {
             val intent = Intent(it.context, AddDrinkActivity::class.java)
             startActivityForResult(intent, 1)
         }
+    }
+
+    private fun editButton(view: View) {
+        val fab: View = view.findViewById(R.id.edit_session_title)
+        fab.setOnClickListener{
+            var builder = AlertDialog.Builder(context)
+            builder.setTitle("Change session")
+            val editText = EditText(context)
+            builder.setView(editText)
+            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+                loadSessionSubscription = RxRoom.createFlowable(db)
+                    .observeOn(Schedulers.io())
+                    .map{  db?.sessionDao()?.getLastSession() ?: error("error") }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        editTitle(it, editText.text.toString())
+                    }
+                var tv: TextView = view.findViewById(R.id.session_title_text)
+                tv.text = editText.text.toString()
+            }
+            builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+                dialog.cancel()
+            }
+            builder.show()
+        }
+    }
+
+    private fun editTitle(session: DrinkingSession, title: String) {
+        session.title = title
+        loadSessionSubscription = RxRoom.createFlowable(db)
+            .observeOn(Schedulers.io())
+            .map{  db?.sessionDao()?.updateSession(session) ?: error("error") }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 
     private fun setActive(value: Boolean) {
@@ -173,6 +212,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun populateList(drinks: List<Drink>) {
+        Collections.reverse(drinks)
         adapter.refreshDrinks(drinks)
     }
 

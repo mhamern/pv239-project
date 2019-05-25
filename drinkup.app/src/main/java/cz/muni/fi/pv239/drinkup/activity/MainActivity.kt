@@ -1,13 +1,19 @@
 package cz.muni.fi.pv239.drinkup.activity
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -27,6 +33,7 @@ import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import android.provider.Settings
 
 
 class MainActivity : AppCompatActivity(),
@@ -38,15 +45,20 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var drawerLayout: DrawerLayout
 
+    private val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
+    private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1234
+    private var mLocationPermissionsGranted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         createDrawer()
         createAppBar()
+        getLocationPermission()
         if (savedInstanceState == null) {
             setPreferences()
             showOverview()
-
         }
     }
 
@@ -173,5 +185,43 @@ class MainActivity : AppCompatActivity(),
 
             editor.commit()
         }
+    }
+
+    private fun getLocationPermission() {
+        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            mLocationPermissionsGranted = true
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                showLocationPermissionRationale(this)
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+    }
+
+    private fun showLocationPermissionRationale(context: Context) {
+        val alertBuilder = AlertDialog.Builder(context)
+        alertBuilder.setCancelable(true)
+        alertBuilder.setTitle("Granting the permission needed")
+        alertBuilder.setMessage("Hi there, if u want to see where u were drinking then u should allow location for this app")
+        alertBuilder.setPositiveButton(android.R.string.ok) { dialog, which ->
+            // this way you can get to the screen to set the permissions manually
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", packageName, null))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        val alert = alertBuilder.create()
+        alert.show()
     }
 }

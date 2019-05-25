@@ -26,6 +26,7 @@ class DrinksOfSessionAdapter(
         notifyDataSetChanged()
 
     }
+
     override fun getItemCount(): Int {
        return drinks.size
        }
