@@ -38,6 +38,10 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:id="@+id/session_drink_alcohol"/>
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:id="@+id/session_drink_volume"/>
 
         </LinearLayout>
     </LinearLayout>
