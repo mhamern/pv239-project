@@ -75,6 +75,7 @@ class HistoryFragment : Fragment(), OnDrinkingSessionDetailListener {
     }
 
     private fun populateList(drinkingSessions: List<DrinkingSession>) {
+        Collections.reverse(drinkingSessions)
         adapter.refreshDrinkingSessions(drinkingSessions)
     }
 

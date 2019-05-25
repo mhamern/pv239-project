@@ -119,6 +119,7 @@ class MyDrinksFragment : Fragment(), OnEditDrinkDefinitionListener {
     }
 
     private fun populateList(drinks: List<DrinkDefinition>) {
+        Collections.reverse(drinks)
         adapter.refreshDrinks(drinks)
     }
 

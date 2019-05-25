@@ -40,17 +40,13 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setMarkers(drinks: List<Drink>, googleMap: GoogleMap?) {
-        val d = drinks.first()
-        val cameraMove: LatLng
-        if (d.latitude != null && d.longitude != null) {
-            cameraMove = LatLng(d.latitude, d.longitude)
-            googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraMove, 14F))
-        }
         for(drink in drinks) {
             var latlng: LatLng
-            if (drink.latitude != null && drink.longitude != null) {
+            if (drink.latitude != 0.0 && drink.longitude != 0.0) {
                 latlng = LatLng(drink.latitude, drink.longitude)
                 items.add(MapItem(latlng))
+                var cameraMove = LatLng(drink.latitude, drink.longitude)
+                googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraMove, 14F))
             }
         }
         clusterManager?.addItems(items)

@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
             <ImageButton
+                android:id="@+id/edit_session_title"
                 android:src = "@drawable/ic_edit_black_24dp"
                 android:clickable="true"
                 android:focusable="true"
