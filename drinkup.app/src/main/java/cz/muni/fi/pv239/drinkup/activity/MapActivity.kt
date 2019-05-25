@@ -1,6 +1,7 @@
 package cz.muni.fi.pv239.drinkup.activity
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.RxRoom
 import com.google.android.gms.maps.*
