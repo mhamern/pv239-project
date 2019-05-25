@@ -40,14 +40,14 @@ class DrinksOfSessionAdapter(
        // var category: TextView = itemView.findViewById(R.id.session_drink_category)
         var price: TextView = itemView.findViewById(R.id.session_drink_price)
         var alcoholVolume: TextView = itemView.findViewById(R.id.session_drink_alcohol)
-        //var volume: TextView = itemView.findViewById(R.id.session_drink_volume)
+        var volume: TextView = itemView.findViewById(R.id.session_drink_volume)
 
         fun bind(drink: Drink){
             name.text = drink.name
            // category.text = context.applicationContext.getString(R.string.category_attr, drink.category.toString())
             price.text = context.applicationContext.getString(R.string.price_attr, drink.price)
             alcoholVolume.text =  context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)
-            //volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
+            volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
         }
     }
 }

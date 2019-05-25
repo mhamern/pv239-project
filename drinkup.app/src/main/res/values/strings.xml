@@ -47,7 +47,7 @@
     <string name="category_attr" formatted="true">Category: %1$s</string>
     <string name="price_attr" formatted="true">Price: %1$.2f €</string>
     <string name="alcohol_with_percents" formatted="true">Alcohol by volume: %1$.1f %%</string>
-    <string name="drink_volume_with_millis" formatted="true">Volume: %1$d ml</string>
+    <string name="drink_volume_with_millis" formatted="true">Volume: %1$.0f ml</string>
     <string name="my_drinks_create_button_text">Create</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_drink_edit_button">Edit</string>
