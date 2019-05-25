@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">DrinkUPWearable</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="no_paired_phone">Nebol nalezen telefon se spárovanú aplikaciú. Prosím, najpv nainštalújte aplikáciu</string>
+    <string name="add_drink_text">Pridať drink</string>
+    <string name="drink_added_toast">Váš drink bol pridán</string>
+    <string name="add_last_drink_parameterized">Pridať %1$s</string>
+    <string name="drink_added_no_permission_toast">Váš drink bol pridán bez lokácie. Pro pridání s lokaciú pridajte práva v mobilné aplikácii
+    </string>
+    <string name="drink_add_failed">Pridánie drinku zlyhalo. Zkuste pridať drink v mobilnej aplikácii.</string>
+
+</resources>
