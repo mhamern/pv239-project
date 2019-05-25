@@ -8,7 +8,7 @@
     <string name="achievements">Ocenenia</string>
     <string name="settings">Nastavenia</string>
     <string name="hello_blank_fragment">Jeeej nový fragment :D</string>
-    <string name="decimal_point_character">,</string>
+    <string name="decimal_point_character">.</string>
     <string name="ach_drink100beer">Vypi 100 pív</string>
     <string name="ach_drink20beer">Vypi 20 pív</string>
     <string name="ach_drink20shots">Vypi 20 panákov</string>
@@ -59,6 +59,8 @@
     <string name="statistics_time_period_last_week">Posledný týždeň</string>
     <string name="statistics_time_period_last_year">Posledný rok</string>
     <string name="edit_title">Zmeň názov večierku</string>
+    <string name="statistics_prices">Ceny</string>
+    <string name="statistics_volume">Objem</string>
     <string name="permission_title">Pridať povolenie k polohe</string>
     <string name="permission_text">Ak chcete vidieť na mape, kde ste pili, mali by ste povoliť polohu pre túto aplikáciu</string>
     <string name="no_session_text">Vytvor nový večierok pridaním drinku (klikni na \'+\')</string>
