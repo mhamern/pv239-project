@@ -70,7 +70,7 @@
     <string name="total_price_of_session" formatted="true">Total price: %1$.2f  €</string>
     <string name="drink_added_from_watch_toast">Your watches added drink!</string>
     <string name="bac">Blood alcohol content</string>
-    <string name="bac_not_set">Blood alcohol content: Not available</string>
+    <string name="bac_not_set">Blood alcohol content: Not available (Set weight and gender in Settings)</string>
     <string name="show_map">Show map</string>
     <string name="bac_message_no_data">No data to provide alcohol in blood</string>
     <string name="you_have">You have</string>
@@ -90,5 +90,6 @@
     <string name="edit_title">Edit title of session</string>
     <string name="permission_title">Granting the permission to location</string>
     <string name="permission_text">Hi there, if u want to see where u were drinking then u should allow location for this app</string>
+    <string name="no_session_text">Create new session by adding drink to it (click \'+\')</string>
     <string name="map">Map</string>
 </resources>

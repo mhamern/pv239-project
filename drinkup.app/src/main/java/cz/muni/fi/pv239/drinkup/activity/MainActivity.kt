@@ -55,8 +55,9 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         createDrawer()
         createAppBar()
-        getLocationPermission()
+
         if (savedInstanceState == null) {
+            getLocationPermission()
             setPreferences()
             showOverview()
         }
