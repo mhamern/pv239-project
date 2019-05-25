@@ -212,8 +212,8 @@ class MainActivity : AppCompatActivity(),
     private fun showLocationPermissionRationale(context: Context) {
         val alertBuilder = AlertDialog.Builder(context)
         alertBuilder.setCancelable(true)
-        alertBuilder.setTitle("Granting the permission needed")
-        alertBuilder.setMessage("Hi there, if u want to see where u were drinking then u should allow location for this app")
+        alertBuilder.setTitle(R.string.permission_title)
+        alertBuilder.setMessage(R.string.permission_text)
         alertBuilder.setPositiveButton(android.R.string.ok) { dialog, which ->
             // this way you can get to the screen to set the permissions manually
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
