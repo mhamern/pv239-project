@@ -47,7 +47,7 @@ class DrinksOfSessionAdapter(
            // category.text = context.applicationContext.getString(R.string.category_attr, drink.category.toString())
             price.text = context.applicationContext.getString(R.string.price_attr, drink.price)
             alcoholVolume.text =  context.applicationContext.getString(R.string.alcohol_with_percents, drink.abv)
-            volume.text = context.applicationContext.getString(R.string.drink_volume_with_millis, drink.volume)
+            volume.text = context.applicationContext.getString(R.string.drink_volume, drink.volume)
         }
     }
 }
