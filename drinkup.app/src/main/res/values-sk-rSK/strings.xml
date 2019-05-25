@@ -58,4 +58,7 @@
     <string name="statistics_time_period_last_month">Posledný mesiac</string>
     <string name="statistics_time_period_last_week">Posledný týždeň</string>
     <string name="statistics_time_period_last_year">Posledný rok</string>
+    <string name="edit_title">Zmeň názov večierku</string>
+    <string name="permission_title">Pridať povolenie k polohe</string>
+    <string name="permission_text">Ak chcete vidieť na mape, kde ste pili, mali by ste povoliť polohu pre túto aplikáciu</string>
 </resources>

@@ -96,10 +96,10 @@ class OverviewFragment : Fragment() {
         val fab: View = view.findViewById(R.id.edit_session_title)
         fab.setOnClickListener{
             var builder = AlertDialog.Builder(context)
-            builder.setTitle("Change session")
+            builder.setTitle(getString(R.string.edit_title))
             val editText = EditText(context)
             builder.setView(editText)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+            builder.setPositiveButton(R.string.save) { dialog, which ->
                 loadSessionSubscription = RxRoom.createFlowable(db)
                     .observeOn(Schedulers.io())
                     .map{  db?.sessionDao()?.getLastSession() ?: error("error") }
@@ -110,7 +110,7 @@ class OverviewFragment : Fragment() {
                 var tv: TextView = view.findViewById(R.id.session_title_text)
                 tv.text = editText.text.toString()
             }
-            builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+            builder.setNegativeButton(R.string.cancel) { dialog, which ->
                 dialog.cancel()
             }
             builder.show()

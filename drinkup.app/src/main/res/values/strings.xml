@@ -87,4 +87,7 @@
     <string name="statistics_time_period_last_year">Last year</string>
     <string name="statistics_prices">Prices</string>
     <string name="statistics_volume">Volume</string>
+    <string name="edit_title">Edit title of session</string>
+    <string name="permission_title">Granting the permission to location</string>
+    <string name="permission_text">Hi there, if u want to see where u were drinking then u should allow location for this app</string>
 </resources>
