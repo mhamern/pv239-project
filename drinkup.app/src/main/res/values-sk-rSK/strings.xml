@@ -8,7 +8,7 @@
     <string name="achievements">Ocenenia</string>
     <string name="settings">Nastavenia</string>
     <string name="hello_blank_fragment">Jeeej nový fragment :D</string>
-    <string name="decimal_point_character">,</string>
+    <string name="decimal_point_character">.</string>
     <string name="ach_drink100beer">Vypi 100 pív</string>
     <string name="ach_drink20beer">Vypi 20 pív</string>
     <string name="ach_drink20shots">Vypi 20 panákov</string>
