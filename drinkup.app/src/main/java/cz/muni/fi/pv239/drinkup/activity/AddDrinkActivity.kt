@@ -33,11 +33,6 @@ class AddDrinkActivity: AppCompatActivity(), OnEditDrinkDefinitionListener {
                         category = drinkDefToAdd.category))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
-        PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .edit()
-                .putBoolean("is_active_session", true)
-                .apply()
         finish()
     }
 
