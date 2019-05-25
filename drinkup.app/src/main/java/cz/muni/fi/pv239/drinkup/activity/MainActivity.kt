@@ -34,6 +34,8 @@ import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import android.provider.Settings
+import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
+import io.reactivex.disposables.Disposable
 
 
 class MainActivity : AppCompatActivity(),
@@ -49,6 +51,9 @@ class MainActivity : AppCompatActivity(),
     private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
     private val LOCATION_PERMISSION_REQUEST_CODE = 1234
     private var mLocationPermissionsGranted = false
+
+    private var db: AppDatabase? = null
+    private var addDrinkDefinitionSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -172,9 +177,25 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
+    private fun createFirstDrinkDefinition(){
+        db = AppDatabase.getAppDatabase(this)
+        addDrinkDefinitionSubscription = RxRoom.createFlowable(db)
+                .observeOn(Schedulers.io())
+                .map { db?.drinkDefinitionDao()?.insertDrinkDefiniton(
+                        DrinkDefinition(name = "Beer",
+                                price = 1.0,
+                                volume = 500,
+                                abv = 5.0)
+                )
+                        ?: error("cannot get drikDef dao") }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {}
+    }
+
     private fun setPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (sharedPreferences.getBoolean("firstRun", true)) {
+            createFirstDrinkDefinition()
             val editor = sharedPreferences.edit()
             editor.putBoolean("firstRun", false)
 
