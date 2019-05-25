@@ -20,7 +20,7 @@
     <string name="alcohol_with_percents">Podiel alkoholu: %1$.1f %%</string>
     <string name="bac">Obsah alkoholu v krvi</string>
     <string name="bac_message_no_data">Nemám data na získanie podielu alkoholu v krvi</string>
-    <string name="bac_not_set">Pohlavie alebo váha nie je nastavená</string>
+    <string name="bac_not_set">Obsah alkoholu v krvi: Nedostupné</string>
     <string name="cancel">Zrušiť</string>
     <string name="category">Kategógia</string>
     <string name="category_attr">Kategória: %1$s</string>
@@ -61,4 +61,5 @@
     <string name="edit_title">Zmeň názov večierku</string>
     <string name="permission_title">Pridať povolenie k polohe</string>
     <string name="permission_text">Ak chcete vidieť na mape, kde ste pili, mali by ste povoliť polohu pre túto aplikáciu</string>
+    <string name="map">Mapa</string>
 </resources>
