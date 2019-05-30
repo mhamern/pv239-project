@@ -1,0 +1,29 @@
+- Pekny packaging a deleni do trid
+- Kdyz odmitnu location permission, appka mi pri dalsim spusteni zobrazi dialog. Za prve mi dialog nedava moznost
+odmitnout, ale po OK me rovnou posle do nastaveni, za druhe dialog pri otoceni zarizeni zmizi.
+- Create drink:
+* Neni scrollable, takze kdyz jsem na inputu pro zadani alcohol by volume a vyjede mi klavesnice, nevidim, ze tam je dalsi field
+* Kdyz jsem na poslednim inputu, nevidim a nemuzu zascrollovat na toolbar, aniz bych skryl klavesnici
+- My drinks:
+* Nechapu, proc je pod toolbarem ten bily pruh
+* Dole je taky
+- Overview:
+* Chtelo by to (napr. stinem) rozlisit, ze ten pruh s informacemi o datu, mnozstvi alkoholu atd., je staticky
+* nezvetsovat list az s pridanim drinku, list tam ma byt furt, ale prazdny a s informaci, ze je prazdny, takhle je tam
+po pridani 2 drinku dole skaredy bily pruh
+* Posledni prvek v listu je naplacnuty na spodek listu, chybi padding/margin
+* Na posledni prvek nevidim pres "End session" tlacitko, na to jsem upozornoval na konzultaci
+* "End session" udela jenom to, ze schova samo sebe. Uzivatel nevi, co se vlastne stalo, kdyz appku nezna. Nevi taky, ze + zahaji novou session.
+- History:
+* Opet skaredy zvetsujici se list s odsazenim nahore a chybejicim paddingem po poslednim prvku. Je to uplne vsude.
+- Wear:
+* Kdyz pridam pivo, neaktualizuje se seznam v mobilu, ale ani mnozstvi alkoholu na hodinkach
+* Nova session by idealne mela vytvorit notifikaci, ktera by se aktualizovala i na hodinkach a pres ni bych mohl prechazet k aplikaci
+
+- Neresite Lint warningy
+- Misty spatne citelny kod (napr. MapActivity.onCreate()), je fajn delit radky do souvisejicich bloku
+
+- Celkove funkcni, nepada, otaci se, jenom to na me pusobi trochu splacane narychlo. Kodu mate hromadu, az hledim, kolik jste ho stihli napsat.
+Na druhou stranu jste tri, takze to zhruba vychazi na trojnasobek oproti jednoclennym tymum.
+- Prosim o potvrzeni do Slacku, ze jste na tom delali vsichni. Na par mistech jsem mrknul na git anotace a videl jsem jenom Havrila a Hamernik.
+Ale neprochazel jsem vsechno, takze jsem mel treba jenom smulu.

@@ -7,9 +7,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
+import android.provider.Settings
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,22 +19,17 @@ import androidx.fragment.app.Fragment
 import androidx.room.RxRoom
 import com.google.android.material.navigation.NavigationView
 import cz.muni.fi.pv239.drinkup.R
-import cz.muni.fi.pv239.drinkup.fragment.*
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.wearable.*
-import cz.muni.fi.pv239.drinkup.fragment.statistics.StatisticsFragment
-import com.google.android.gms.wearable.Wearable
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
-import cz.muni.fi.pv239.drinkup.database.entity.Category
-import cz.muni.fi.pv239.drinkup.database.entity.Drink
-import cz.muni.fi.pv239.drinkup.database.entity.DrinkingSession
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import android.provider.Settings
 import cz.muni.fi.pv239.drinkup.database.entity.DrinkDefinition
+import cz.muni.fi.pv239.drinkup.fragment.AchievementsFragment
+import cz.muni.fi.pv239.drinkup.fragment.HistoryFragment
+import cz.muni.fi.pv239.drinkup.fragment.MyDrinksFragment
+import cz.muni.fi.pv239.drinkup.fragment.OverviewFragment
+import cz.muni.fi.pv239.drinkup.fragment.statistics.StatisticsFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -48,7 +42,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var drawerLayout: DrawerLayout
 
     private val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
-    private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
+    private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION    // COARSE, ne COURSE :)
     private val LOCATION_PERMISSION_REQUEST_CODE = 1234
     private var mLocationPermissionsGranted = false
 
@@ -192,6 +186,7 @@ class MainActivity : AppCompatActivity(),
                 .subscribe {}
     }
 
+    // Samostatnou helper tridu pro preferences, takhle mate spoustu duplicitniho kodu
     private fun setPreferences() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (sharedPreferences.getBoolean("firstRun", true)) {

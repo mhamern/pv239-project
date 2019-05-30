@@ -7,12 +7,13 @@ import android.os.Build
 import android.preference.PreferenceManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.entity.Category
 
+// Takze ne class, ale object?
 class AchievementService {
     companion object {
+        // Nazev mi vubec nerika, co by ta metoda mela delat
         @JvmStatic
         fun achievements(category: Category, context: Context) {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

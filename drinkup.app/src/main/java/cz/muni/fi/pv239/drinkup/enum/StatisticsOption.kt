@@ -3,6 +3,7 @@ package cz.muni.fi.pv239.drinkup.enum
 import android.content.Context
 import cz.muni.fi.pv239.drinkup.R
 
+// Custom value, jako u predchoziho enumu
 enum class StatisticsOption {
     PRICE {
         override fun toStringLocalized(context: Context?): String {

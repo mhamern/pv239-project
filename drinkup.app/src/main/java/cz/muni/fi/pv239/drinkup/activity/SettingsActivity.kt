@@ -1,12 +1,12 @@
 package cz.muni.fi.pv239.drinkup.activity
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceManager
-import com.takisoft.preferencex.PreferenceFragmentCompat
-import androidx.appcompat.app.AppCompatActivity
 import com.takisoft.preferencex.EditTextPreference
+import com.takisoft.preferencex.PreferenceFragmentCompat
 import cz.muni.fi.pv239.drinkup.input.filter.InputFilterMinMax
 import kotlinx.android.synthetic.main.settings.*
 
@@ -34,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 }
 
+// Oddelit do samostatneho souboru
 class MySettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferencesFix(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(cz.muni.fi.pv239.drinkup.R.xml.preferences, rootKey)
@@ -44,6 +45,7 @@ class MySettingsFragment : PreferenceFragmentCompat() {
     }
 
     companion object {
+        // Like
         private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference, value ->
             val stringValue = value.toString()
 

@@ -1,12 +1,12 @@
 package cz.muni.fi.pv239.drinkup.database.entity
 
-import android.location.Location
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
+import java.util.*
 
+// Kotlin experimental @Parcelable nebo @Parcelize (tak nejak) anotace dela cely parceling sama ;)
 @Entity(tableName = "Drinks")
 data class Drink(
         @PrimaryKey(autoGenerate = true) val id: Long? = null,
