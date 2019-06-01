@@ -7,7 +7,6 @@ import androidx.room.RxRoom
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
-import cz.muni.fi.pv239.drinkup.R
 import cz.muni.fi.pv239.drinkup.database.AppDatabase
 import cz.muni.fi.pv239.drinkup.database.entity.Drink
 import cz.muni.fi.pv239.drinkup.utils.MapItem
@@ -17,6 +16,13 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.settings.*
 import java.util.*
+import com.google.maps.android.clustering.Cluster
+import com.google.android.gms.maps.GoogleMap
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
+import com.google.maps.android.clustering.ClusterItem
+import cz.muni.fi.pv239.drinkup.R
+import android.content.Context
+
 
 class MapActivity: AppCompatActivity(), OnMapReadyCallback {
 
@@ -28,7 +34,9 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap?) {
         var sessionId = intent.getLongExtra("sessionid", 0)
         db = AppDatabase.getAppDatabase(this)
-        clusterManager = ClusterManager<MapItem>(this, p0)
+        val clusterManager1 = ClusterManager<MapItem>(this, p0)
+        if (p0 != null) clusterManager1.renderer = CustomRenderer(this, p0, clusterManager1)
+        clusterManager = clusterManager1
         p0?.setOnCameraIdleListener(clusterManager)
         p0?.setOnMarkerClickListener(clusterManager)
         getDrinksSubscription = RxRoom.createFlowable(db)
@@ -38,6 +46,18 @@ class MapActivity: AppCompatActivity(), OnMapReadyCallback {
             .subscribe {
                 setMarkers(it, p0)
             }
+    }
+
+    //creating cluster if more then 1 item overlap
+    internal inner class CustomRenderer<T : ClusterItem>(
+        context: Context,
+        map: GoogleMap,
+        clusterManager: ClusterManager<T>
+    ) : DefaultClusterRenderer<T>(context, map, clusterManager) {
+
+        override fun shouldRenderAsCluster(cluster: Cluster<T>): Boolean {
+            return cluster.size > 0
+        }
     }
 
     private fun setMarkers(drinks: List<Drink>, googleMap: GoogleMap?) {

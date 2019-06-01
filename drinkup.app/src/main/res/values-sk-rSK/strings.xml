@@ -27,8 +27,8 @@
     <string name="category_icon_placeholder">Ikonka kategórie</string>
     <string name="create_drink">Vytvoriť Drink</string>
     <string name="drink_added_from_watch_toast">Hodinky pridali drink!</string>
-    <string name="drink_volume_with_millis">Objem: %1.0f ml</string>
-    <string name="drink_volume" formatted="true">Volume: %1d ml</string>
+    <string name="drink_volume_with_millis">Objem: %1d ml</string>
+    <string name="drink_volume" formatted="true">Volume: %1.0f ml</string>
     <string name="edit_drink">Upraviť drink</string>
     <string name="end_session">Ukončiť</string>
     <string name="error_drink_abv_empty">Podiel alkoholu musí byť vyplnený</string>
