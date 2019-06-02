@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:background="@color/white"
         android:id="@+id/last_session_wrapper"
@@ -65,22 +65,25 @@
             android:clipToPadding="false"
             android:paddingBottom="90dp" />
 
-    </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/last_session_add_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_add_fab"
-        app:backgroundTint="@color/colorAccent"
-        android:layout_margin="16dp" />
 
-    <Button
-        android:id="@+id/last_session_end_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="8dp"
-        android:text="@string/end_session"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/last_session_add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_add_fab"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_margin="16dp" />
+
+        <Button
+            android:id="@+id/last_session_end_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="8dp"
+            android:text="@string/end_session"/>
+
+    </LinearLayout>
+
 
 </FrameLayout>
