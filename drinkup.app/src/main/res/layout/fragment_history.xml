@@ -7,13 +7,13 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/drinking_session_wrapper"
             android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/drinking_session_list"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content"
+                                                   android:layout_height="match_parent"
                                                    android:layout_marginTop="16dp"/>
 
     </LinearLayout>

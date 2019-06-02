@@ -62,7 +62,8 @@
             android:id="@+id/last_session_drink_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="32dp"
+            android:clipToPadding="false"
+            android:paddingBottom="90dp"
             android:layout_marginTop="16dp"/>
 
     </LinearLayout>
