@@ -13,8 +13,7 @@
 
         <androidx.recyclerview.widget.RecyclerView android:id="@+id/drinking_session_list"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:layout_marginTop="16dp"/>
+                                                   android:layout_height="match_parent" />
 
     </LinearLayout>
 
